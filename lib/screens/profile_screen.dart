@@ -13,7 +13,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 3, vsync: this, initialIndex: 2); // Start at Edit Profile
   }
 
   @override
@@ -24,84 +24,106 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
 
   @override
   Widget build(BuildContext context) {
-    final screenHeight = MediaQuery.of(context).size.height;
-
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFFAFAFA), // Slightly off-white background
       body: SingleChildScrollView(
         child: Column(
           children: [
-            // Header
-            Container(
-              height: screenHeight * 0.3,
-              color: const Color(0xFFB71C1C),
-              padding: const EdgeInsets.only(top: 40, left: 16, right: 16),
-              child: Column(
-                children: [
-                  Row(
+            Stack(
+              clipBehavior: Clip.none,
+              alignment: Alignment.topCenter,
+              children: [
+                // 1. Header Background & Content
+                Container(
+                  height: 280, // Extended height to accommodate content
+                  width: double.infinity,
+                  color: const Color(0xFFB71C1C),
+                  padding: const EdgeInsets.only(top: 40, left: 16, right: 16),
+                  child: Column(
                     children: [
-                      IconButton(
-                        onPressed: () {
-                          Navigator.of(context).pushReplacementNamed('/home');
-                        },
-                        icon: const Icon(
-                          Icons.arrow_back,
+                      Row(
+                        children: [
+                          IconButton(
+                            onPressed: () {
+                              Navigator.of(context).pushReplacementNamed('/home');
+                            },
+                            icon: const Icon(Icons.arrow_back, color: Colors.white),
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      // Profile Image
+                      Container(
+                        padding: const EdgeInsets.all(3),
+                        decoration: const BoxDecoration(
                           color: Colors.white,
+                          shape: BoxShape.circle,
+                        ),
+                        child: const CircleAvatar(
+                          radius: 55, // 110px diameter
+                          backgroundColor: Colors.grey,
+                          backgroundImage: NetworkImage('https://via.placeholder.com/150'), // Placeholder
+                          child: Icon(Icons.person, size: 60, color: Colors.white), // Fallback
+                        ),
+                      ),
+                      const SizedBox(height: 12),
+                      // Name
+                      const Text(
+                        'DANDY CANDRA PRATAMA',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
                     ],
                   ),
-                  const Spacer(),
-                  const CircleAvatar(
-                    radius: 50,
-                    backgroundColor: Color(0xFFD32F2F),
-                    child: Icon(
-                      Icons.person,
-                      size: 50,
-                      color: Colors.white,
-                    ),
-                  ),
-                  const SizedBox(height: 10),
-                  const Text(
-                    'DANDY CANDRA PRATAMA',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontSize: 20,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            // Tab Menu
-            Transform.translate(
-              offset: const Offset(0, -20),
-              child: Card(
-                elevation: 4,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(16),
                 ),
-                child: TabBar(
-                  controller: _tabController,
-                  indicator: BoxDecoration(
-                    color: Colors.grey[300],
+
+                // 2. Floating Menu Card
+                Container(
+                  margin: const EdgeInsets.only(top: 240, left: 16, right: 16),
+                  decoration: BoxDecoration(
+                    color: Colors.white,
                     borderRadius: BorderRadius.circular(16),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withOpacity(0.05),
+                        blurRadius: 10,
+                        offset: const Offset(0, 5),
+                      ),
+                    ],
                   ),
-                  labelColor: Colors.black,
-                  unselectedLabelColor: Colors.black,
-                  tabs: const [
-                    Tab(text: 'About Me'),
-                    Tab(text: 'Kelas'),
-                    Tab(text: 'Edit Profile'),
-                  ],
+                  child: TabBar(
+                    controller: _tabController,
+                    indicatorColor: const Color(0xFFB71C1C),
+                    indicatorWeight: 3,
+                    labelColor: Colors.black,
+                    unselectedLabelColor: Colors.grey,
+                    labelStyle: const TextStyle(fontWeight: FontWeight.bold),
+                    tabs: const [
+                      Tab(text: 'About Me'),
+                      Tab(text: 'Kelas'),
+                      Tab(text: 'Edit Profile'),
+                    ],
+                  ),
                 ),
-              ),
+              ],
             ),
-            // Tab Content
-            SizedBox(
-              height: screenHeight * 0.6,
+            
+            // 3. Tab Content
+            // We use a SizedBox to give height, or let it take available space.
+            // Since we are in SingleChildScrollView, we need a constrained height if we use TabBarView normally.
+            // Alternatively, we can use an AnimatedBuilder or just switch locally if complex.
+            // For simplicity and scroll behavior:
+            Container(
+              margin: const EdgeInsets.only(top: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 16),
+              // Calculate height dynamically or give fixed large height
+              height: 700, 
               child: TabBarView(
                 controller: _tabController,
+                physics: const NeverScrollableScrollPhysics(), // Disable inner scroll
                 children: [
                   _buildAboutMeTab(),
                   _buildKelasTab(),
@@ -116,7 +138,22 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
         backgroundColor: const Color(0xFFB71C1C),
         selectedItemColor: Colors.white,
         unselectedItemColor: Colors.white70,
-        currentIndex: 3, // Profile active, but since only 3 items, perhaps add Profile
+        currentIndex: 0, // Profile is accessed from Home, but for BottomNav context, keeping 0/none or highlight none? 
+        // Actually Profile doesn't have its own tab in the 3-item list (Home, Kelas, Notifikasi).
+        // The user hides Profile logic there?
+        // Wait, the previous code had 4 items, but I changed it to 3 in the refined profile screen.
+        // Let's stick to the 3 items (Home, Kelas, Notifikasi).
+        // Since we are on Profile, none should be selected or maybe Home is implicitly parent.
+        // But visuals might be confusing if Home is selected.
+        // I will use currentIndex: 0 as fallback or maybe not highlight anything if possible, but standard widget requires valid index.
+        type: BottomNavigationBarType.fixed,
+        onTap: (index) {
+          if (index == 0) {
+             Navigator.pushReplacementNamed(context, '/home');
+          } else if (index == 2) {
+             Navigator.pushReplacementNamed(context, '/notification');
+          }
+        },
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
@@ -129,10 +166,6 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
           BottomNavigationBarItem(
             icon: Icon(Icons.notifications),
             label: 'Notifikasi',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.person),
-            label: 'Profile',
           ),
         ],
       ),
@@ -180,11 +213,14 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
     ];
 
     return ListView.builder(
+      physics: const NeverScrollableScrollPhysics(), // Prevent nested scrolling issues
       itemCount: classes.length,
       itemBuilder: (context, index) {
         final cls = classes[index];
         return Card(
-          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 8), // Adjusted margin
+          elevation: 2,
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
           child: Padding(
             padding: const EdgeInsets.all(16),
             child: Row(
@@ -192,7 +228,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                 Switch(
                   value: true,
                   onChanged: (value) {},
-                  activeColor: Colors.blue[300],
+                  activeColor: const Color(0xFFB71C1C),
                 ),
                 const SizedBox(width: 16),
                 Expanded(
@@ -203,14 +239,19 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                         cls['name'] as String,
                         style: const TextStyle(
                           fontWeight: FontWeight.bold,
+                          fontSize: 14,
                         ),
                       ),
-                      Text(cls['code'] as String),
+                      const SizedBox(height: 4),
+                      Text(
+                        cls['code'] as String,
+                         style: TextStyle(color: Colors.grey[700]),
+                      ),
                       Text(
                         cls['schedule'] as String,
                         style: TextStyle(
                           fontSize: 12,
-                          color: Colors.grey[600],
+                          color: Colors.grey[500],
                         ),
                       ),
                     ],
@@ -225,78 +266,86 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
   }
 
   Widget _buildEditProfileTab() {
-    return Padding(
-      padding: const EdgeInsets.all(16),
-      child: Column(
-        children: [
-          TextField(
-            decoration: InputDecoration(
-              labelText: 'Nama Pertama',
-              border: OutlineInputBorder(
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildLabeledInput('Nama Pertama'),
+        const SizedBox(height: 16),
+        _buildLabeledInput('Nama Terakhir'),
+        const SizedBox(height: 16),
+        _buildLabeledInput('E-mail Address', inputType: TextInputType.emailAddress),
+        const SizedBox(height: 16),
+        _buildLabeledInput('Negara', placeholder: 'Indonesia'),
+        const SizedBox(height: 16),
+        _buildLabeledInput('Deskripsi', maxLines: 4),
+        const SizedBox(height: 32),
+        
+        SizedBox(
+          width: double.infinity,
+          height: 48,
+          child: ElevatedButton(
+            onPressed: () {},
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFB71C1C),
+              shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8),
               ),
+              elevation: 0,
             ),
-          ),
-          const SizedBox(height: 16),
-          TextField(
-            decoration: InputDecoration(
-              labelText: 'Nama Terakhir',
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
+            child: const Text(
+              'Simpan',
+              style: TextStyle(
+                color: Colors.white,
+                fontWeight: FontWeight.bold,
+                fontSize: 16,
               ),
             ),
           ),
-          const SizedBox(height: 16),
-          TextField(
-            decoration: InputDecoration(
-              labelText: 'E-mail Address',
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
-            ),
+        ),
+      ],
+    );
+  }
+
+  Widget _buildLabeledInput(String label, {
+    TextInputType inputType = TextInputType.text,
+    String? placeholder,
+    int maxLines = 1,
+  }) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          label,
+          style: const TextStyle(
+            fontSize: 14,
+            fontWeight: FontWeight.w500,
+            color: Colors.black87,
           ),
-          const SizedBox(height: 16),
-          TextField(
-            decoration: InputDecoration(
-              labelText: 'Negara',
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
+        ),
+        const SizedBox(height: 8),
+        TextField(
+          keyboardType: inputType,
+          maxLines: maxLines,
+          decoration: InputDecoration(
+            hintText: placeholder,
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(color: Colors.grey),
             ),
-          ),
-          const SizedBox(height: 16),
-          TextField(
-            maxLines: 3,
-            decoration: InputDecoration(
-              labelText: 'Deskripsi',
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-              ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(color: Colors.grey), // Grey thin border
             ),
-          ),
-          const SizedBox(height: 24),
-          SizedBox(
-            width: double.infinity,
-            height: 48,
-            child: ElevatedButton(
-              onPressed: () {},
-              style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.green,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              child: const Text(
-                'Simpan',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
-              ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(8),
+              borderSide: const BorderSide(color: Color(0xFFB71C1C)),
             ),
+            filled: true,
+            fillColor: Colors.white,
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

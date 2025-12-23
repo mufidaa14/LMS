@@ -5,6 +5,9 @@ import 'screens/home_screen.dart';
 import 'screens/register_screen.dart';
 import 'screens/profile_screen.dart';
 import 'screens/language_selection_screen.dart';
+import 'screens/notification_screen.dart';
+import 'screens/announcement_list_screen.dart';
+import 'screens/announcement_detail_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -30,6 +33,9 @@ class MyApp extends StatelessWidget {
         '/home': (context) => const HomeScreen(),
         '/register': (context) => const RegisterScreen(),
         '/profile': (context) => const ProfileScreen(),
+        '/notification': (context) => const NotificationScreen(),
+        '/announcement_list': (context) => const AnnouncementListScreen(),
+        '/announcement_detail': (context) => const AnnouncementDetailScreen(),
       },
     );
   }

@@ -149,11 +149,16 @@ class HomeScreen extends StatelessWidget {
                       color: Colors.black,
                     ),
                   ),
-                  Text(
-                    'Lihat Semua',
-                    style: TextStyle(
-                      color: const Color(0xFFB71C1C),
-                      fontSize: 14,
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.pushNamed(context, '/announcement_list');
+                    },
+                    child: Text(
+                      'Lihat Semua',
+                      style: TextStyle(
+                        color: const Color(0xFFB71C1C),
+                        fontSize: 14,
+                      ),
                     ),
                   ),
                 ],
@@ -223,6 +228,12 @@ class HomeScreen extends StatelessWidget {
         selectedItemColor: Colors.white,
         unselectedItemColor: Colors.white70,
         currentIndex: 0,
+        type: BottomNavigationBarType.fixed,
+        onTap: (index) {
+          if (index == 2) {
+             Navigator.pushReplacementNamed(context, '/notification');
+          }
+        },
         items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
