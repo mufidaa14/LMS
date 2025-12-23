@@ -150,6 +150,8 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
         onTap: (index) {
           if (index == 0) {
              Navigator.pushReplacementNamed(context, '/home');
+          } else if (index == 1) {
+             Navigator.pushReplacementNamed(context, '/class_list');
           } else if (index == 2) {
              Navigator.pushReplacementNamed(context, '/notification');
           }

@@ -66,8 +66,7 @@ class NotificationScreen extends StatelessWidget {
           if (index == 0) {
             Navigator.pushReplacementNamed(context, '/home');
           } else if (index == 1) {
-            // Placeholder for Kelas Saya
-            // Navigator.pushReplacementNamed(context, '/kelas');
+            Navigator.pushReplacementNamed(context, '/class_list');
           }
            // Index 2 is current
         },

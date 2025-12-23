@@ -230,7 +230,9 @@ class HomeScreen extends StatelessWidget {
         currentIndex: 0,
         type: BottomNavigationBarType.fixed,
         onTap: (index) {
-          if (index == 2) {
+          if (index == 1) {
+            Navigator.pushReplacementNamed(context, '/class_list');
+          } else if (index == 2) {
              Navigator.pushReplacementNamed(context, '/notification');
           }
         },
