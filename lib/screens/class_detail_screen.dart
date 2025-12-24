@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'document_viewer_screen.dart';
 
 class ClassDetailScreen extends StatefulWidget {
   const ClassDetailScreen({super.key});
@@ -158,33 +159,43 @@ class _ClassDetailScreenState extends State<ClassDetailScreen> with SingleTicker
       itemCount: items.length,
       itemBuilder: (context, index) {
         final item = items[index];
-        return Container(
-          margin: const EdgeInsets.only(bottom: 12),
-          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(30), // Pill shape
-            border: Border.all(color: Colors.grey.shade300),
-            boxShadow: [
-               BoxShadow(
-                color: Colors.black.withOpacity(0.03),
-                blurRadius: 4,
-                offset: const Offset(0, 2),
-              ),
-            ],
-          ),
-          child: Row(
-            children: [
-               Icon(item['icon'] as IconData, size: 22, color: Colors.black87),
-               const SizedBox(width: 16),
-               Expanded(
-                 child: Text(
-                   item['title'] as String,
-                   style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+        return GestureDetector(
+          onTap: () {
+            if (item['type'] == 'doc' || item['type'] == 'pdf') {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const DocumentViewerScreen()),
+              );
+            }
+          },
+          child: Container(
+            margin: const EdgeInsets.only(bottom: 12),
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(30), // Pill shape
+              border: Border.all(color: Colors.grey.shade300),
+              boxShadow: [
+                 BoxShadow(
+                  color: Colors.black.withOpacity(0.03),
+                  blurRadius: 4,
+                  offset: const Offset(0, 2),
+                ),
+              ],
+            ),
+            child: Row(
+              children: [
+                 Icon(item['icon'] as IconData, size: 22, color: Colors.black87),
+                 const SizedBox(width: 16),
+                 Expanded(
+                   child: Text(
+                     item['title'] as String,
+                     style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+                   ),
                  ),
-               ),
-               const Icon(Icons.check_circle, color: Colors.green, size: 22),
-            ],
+                 const Icon(Icons.check_circle, color: Colors.green, size: 22),
+              ],
+            ),
           ),
         );
       },
