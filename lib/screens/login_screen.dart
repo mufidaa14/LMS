@@ -12,240 +12,293 @@ class _LoginScreenState extends State<LoginScreen> {
   final TextEditingController _passwordController = TextEditingController();
   bool _obscureText = true;
 
+  // Warna Merah Maroon
+  final Color maroonColor = const Color(0xFF800000); 
+
   @override
   Widget build(BuildContext context) {
-    final screenHeight = MediaQuery.of(context).size.height;
-    final screenWidth = MediaQuery.of(context).size.width;
-
     return Scaffold(
-      backgroundColor: const Color(0xFFF5F5F5), // Light grey background like the image
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            Stack(
-              clipBehavior: Clip.none,
-              alignment: Alignment.center,
-              children: [
-                // 1. Curved Background Header
-                ClipPath(
-                  clipper: HeaderCurveClipper(),
-                  child: Container(
-                    height: screenHeight * 0.45,
-                    width: double.infinity,
-                    color: const Color(0xFFB71C1C),
-                  ),
-                ),
-
-                // 2. Building Image Card (Placeholder)
-                Positioned(
-                  top: screenHeight * 0.1,
-                  child: Container(
-                    width: screenWidth * 0.85,
-                    height: 200,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(20),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
-                          blurRadius: 10,
-                          offset: const Offset(0, 5),
+      backgroundColor: Colors.white,
+      body: SafeArea(
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              // ========================
+              // HEADER & LOGO (STACK APPROACH)
+              // ========================
+              // Menggunakan Stack untuk overlap yang "LEGAL" (Aman dari error negative margin)
+              Stack(
+                clipBehavior: Clip.none, // Izinkan logo keluar dari batas bawah header
+                alignment: Alignment.center,
+                children: [
+                  // 1. HEADER (Gradient & Wave)
+                  ClipPath(
+                    clipper: HeaderWaveClipper(),
+                    child: Container(
+                      height: 150, 
+                      width: double.infinity,
+                      decoration: BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.topCenter,
+                          end: Alignment.bottomCenter,
+                          colors: [
+                            const Color(0xFF600000), // Dark Red
+                            maroonColor, // Maroon
+                          ],
                         ),
-                      ],
-                      image: const DecorationImage(
-                        image: NetworkImage('https://via.placeholder.com/400x200?text=Building+Image'), // Placeholder
-                        fit: BoxFit.cover,
                       ),
-                    ),
-                    // Fallback child if image fails to load or just to show placeholder text
-                    child: const Center(
-                      child: Icon(Icons.apartment, size: 50, color: Colors.grey),
                     ),
                   ),
-                ),
 
-                // 3. Logo (Circular Overlay)
-                Positioned(
-                  bottom: -40, // Half of height (80/2) to overlap logic if needed, but here dependent on stack
-                  // Let's position it relative to the building card or the curve
-                  top: (screenHeight * 0.1) + 200 - 40, 
-                  child: Container(
-                    width: 80,
-                    height: 80,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      shape: BoxShape.circle,
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withOpacity(0.1),
-                          blurRadius: 5,
-                          offset: const Offset(0, 2),
-                        ),
-                      ],
-                    ),
-                    padding: const EdgeInsets.all(12),
-                    child: Image.asset(
-                      'assets/images/img.png',
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            
-            const SizedBox(height: 60), // Spacer for the logo overlap
-
-            // 4. Login Form
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
-              child: Card(
-                elevation: 0,
-                color: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(20),
-                ),
-                child: Padding(
-                  padding: const EdgeInsets.all(24),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const Text(
-                        'Login',
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black87,
-                        ),
+                  // 2. LOGO (Positioned Overlap)
+                  // Posisikan di bawah (bottom: -40) agar setengahnya keluar
+                  Positioned(
+                    bottom: -40, 
+                    child: Container(
+                      width: 90, 
+                      height: 90,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: Colors.white,
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.15),
+                            blurRadius: 10, 
+                            offset: const Offset(0, 4),
+                          ),
+                        ],
                       ),
-                      const SizedBox(height: 24),
-                      
-                      // Email Field
-                      TextField(
-                        controller: _emailController,
-                        decoration: const InputDecoration(
-                          hintText: 'Username', // As requested: Username placeholder
-                          labelText: 'Email / Username',
-                          prefixIcon: null, // Removed icon to match "Clean" design or keep simple
-                          border: UnderlineInputBorder(),
-                          enabledBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey),
-                          ),
-                          focusedBorder: UnderlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xFFB71C1C)),
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-                      
-                      // Password Field
-                      TextField(
-                        controller: _passwordController,
-                        obscureText: _obscureText,
-                        decoration: InputDecoration(
-                          hintText: 'Password',
-                          labelText: 'Password',
-                          border: const UnderlineInputBorder(),
-                          enabledBorder: const UnderlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey),
-                          ),
-                          focusedBorder: const UnderlineInputBorder(
-                            borderSide: BorderSide(color: Color(0xFFB71C1C)),
-                          ),
-                          suffixIcon: IconButton(
-                            icon: Icon(
-                              _obscureText ? Icons.visibility_off : Icons.visibility,
-                              color: Colors.grey,
-                            ),
-                            onPressed: () {
-                              setState(() {
-                                _obscureText = !_obscureText;
-                              });
-                            },
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 32),
-                      
-                      // Login Button
-                      SizedBox(
-                        width: double.infinity,
-                        height: 50,
-                        child: ElevatedButton(
-                          onPressed: () {
-                            Navigator.of(context).pushReplacementNamed('/home');
+                      padding: const EdgeInsets.all(10),
+                      child: ClipOval(
+                        child: Image.asset(
+                          'assets/images/Logo untuk Login.png',
+                          fit: BoxFit.contain,
+                          errorBuilder: (context, error, stackTrace) {
+                            return Icon(Icons.school, size: 40, color: maroonColor);
                           },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: const Color(0xFFB71C1C),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                            elevation: 2,
-                          ),
-                          child: const Text(
-                            'LOGIN',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontWeight: FontWeight.bold,
-                              fontSize: 16,
-                            ),
-                          ),
                         ),
                       ),
-                      
-                      const SizedBox(height: 16),
-                      
-                      // Forgot Password
-                      Center(
-                        child: TextButton(
-                          onPressed: () {
-                            // Forgot password action
-                          },
-                          child: const Text(
-                            'Forgot Password ?',
-                            style: TextStyle(
-                              color: Colors.grey,
-                              fontSize: 14,
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
+                    ),
+                  ),
+                ],
+              ),
+
+              // Spacer untuk memberi tempat bagi Logo yang "numpang"
+              // Karena logo keluar 40px dari Stack, kita butuh spacer 40px + margin tambahan
+              const SizedBox(height: 60), 
+
+              // ========================
+              // TITLE
+              // ========================
+              const Padding(
+                padding: EdgeInsets.symmetric(horizontal: 24),
+                child: Center(
+                  child: Text(
+                    "Login",
+                    style: TextStyle(
+                      fontSize: 26, 
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                    ),
                   ),
                 ),
               ),
-            ),
-            
-            const SizedBox(height: 24),
-          ],
+
+              // ========================
+              // FORM FIELDS
+              // ========================
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 24),
+                child: Column(
+                  children: [
+                    const SizedBox(height: 24),
+                    // Email
+                    TextField(
+                      controller: _emailController,
+                      style: const TextStyle(fontSize: 14),
+                      decoration: InputDecoration(
+                        labelText: "Email",
+                        labelStyle: TextStyle(
+                          color: maroonColor.withOpacity(0.7),
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500
+                        ),
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: maroonColor),
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: maroonColor, width: 2),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(vertical: 12),
+                        isDense: true,
+                      ),
+                    ),
+
+                    const SizedBox(height: 16),
+
+                    // Password
+                    TextField(
+                      controller: _passwordController,
+                      obscureText: _obscureText,
+                      style: const TextStyle(fontSize: 14),
+                      decoration: InputDecoration(
+                        labelText: "Password",
+                        labelStyle: TextStyle(
+                          color: maroonColor.withOpacity(0.7),
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500
+                        ),
+                        enabledBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: maroonColor),
+                        ),
+                        focusedBorder: UnderlineInputBorder(
+                          borderSide: BorderSide(color: maroonColor, width: 2),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(vertical: 12),
+                        isDense: true,
+                        suffixIcon: IconButton(
+                          icon: Icon(
+                            _obscureText ? Icons.visibility_off : Icons.visibility,
+                            color: Colors.grey,
+                          ),
+                          onPressed: () {
+                            setState(() {
+                              _obscureText = !_obscureText;
+                            });
+                          },
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+
+              // ========================
+              // BUTTON & HELP
+              // ========================
+              Container(
+                width: double.infinity,
+                height: 48,
+                margin: const EdgeInsets.only(top: 32, left: 24, right: 24),
+                decoration: BoxDecoration(
+                  color: maroonColor,
+                  borderRadius: BorderRadius.circular(24),
+                  boxShadow: [
+                    BoxShadow(
+                      color: maroonColor.withOpacity(0.3),
+                      blurRadius: 4,
+                      offset: const Offset(0, 3),
+                    ),
+                  ],
+                ),
+                child: ElevatedButton(
+                  onPressed: () {
+                     Navigator.of(context).pushReplacementNamed('/home');
+                  },
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.transparent,
+                    shadowColor: Colors.transparent,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(24),
+                    ),
+                  ),
+                  child: const Text(
+                    "Log In",
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ),
+
+              Container(
+                margin: const EdgeInsets.only(top: 16, bottom: 32),
+                alignment: Alignment.center,
+                child: InkWell(
+                  onTap: () {},
+                  child: Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Text(
+                      "Lupa Password?",
+                      style: TextStyle(
+                        color: maroonColor,
+                        fontSize: 13,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                  ),
+                ),
+              ),
+
+              // ========================
+              // FOOTER
+              // ========================
+              ClipPath(
+                clipper: FooterDecorationClipper(),
+                child: Container(
+                  height: 100, 
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    gradient: LinearGradient(
+                      colors: [maroonColor, const Color(0xFFA00000)],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter
+                    )
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
   }
 }
 
-// Custom Clipper for the bottom wave/curve of the header
-class HeaderCurveClipper extends CustomClipper<Path> {
+// HEADER CLIPPER (INVERTED WAVE)
+class HeaderWaveClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     var path = Path();
-    path.lineTo(0, size.height - 50); // Start from bottom-left (minus some height)
+    path.lineTo(0, size.height - 50); // Start bottom-leftish
+
+    // Convex curve down
+    var controlPoint = Offset(size.width / 2, size.height);
+    var endPoint = Offset(size.width, size.height - 50);
+
+    path.quadraticBezierTo(controlPoint.dx, controlPoint.dy, endPoint.dx, endPoint.dy);
+
+    path.lineTo(size.width, 0); // Top Right
+    path.lineTo(0, 0); // Top Left
+    path.close();
     
-    // Create a quadratic bezier curve
-    var firstControlPoint = Offset(size.width / 4, size.height);
-    var firstEndPoint = Offset(size.width / 2, size.height - 30);
-    path.quadraticBezierTo(
-        firstControlPoint.dx, firstControlPoint.dy,
-        firstEndPoint.dx, firstEndPoint.dy
-    );
+    return path;
+  }
+
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
+}
+
+// FOOTER CLIPPER
+class FooterDecorationClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    var path = Path();
+    path.moveTo(0, size.height);
+    path.lineTo(0, 20); 
     
-    var secondControlPoint = Offset(size.width * 3 / 4, size.height - 80);
-    var secondEndPoint = Offset(size.width, size.height - 40);
-    path.quadraticBezierTo(
-        secondControlPoint.dx, secondControlPoint.dy,
-        secondEndPoint.dx, secondEndPoint.dy
-    );
+    var controlPoint1 = Offset(size.width * 0.3, -20); 
+    var endPoint1 = Offset(size.width * 0.6, 30);
+    path.quadraticBezierTo(controlPoint1.dx, controlPoint1.dy, endPoint1.dx, endPoint1.dy);
     
-    path.lineTo(size.width, 0); // To top-right
+    var controlPoint2 = Offset(size.width * 0.8, 60); 
+    var endPoint2 = Offset(size.width, 20);
+    path.quadraticBezierTo(controlPoint2.dx, controlPoint2.dy, endPoint2.dx, endPoint2.dy);
+    
+    path.lineTo(size.width, size.height); 
     path.close();
     return path;
   }
