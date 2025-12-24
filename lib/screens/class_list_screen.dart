@@ -118,7 +118,7 @@ class ClassListScreen extends StatelessWidget {
           if (index == 0) {
             Navigator.pushReplacementNamed(context, '/home');
           } else if (index == 2) {
-             Navigator.pushReplacementNamed(context, '/profile'); // Assuming profile is tab 2 usually
+             Navigator.pushReplacementNamed(context, '/notification');
           }
         },
         items: const [
@@ -133,9 +133,9 @@ class ClassListScreen extends StatelessWidget {
             label: 'Kelas Saya',
           ),
           BottomNavigationBarItem(
-            icon: Icon(Icons.person_outline),
-            activeIcon: Icon(Icons.person),
-            label: 'Profil',
+            icon: Icon(Icons.notifications_outlined),
+            activeIcon: Icon(Icons.notifications),
+            label: 'Notifikasi',
           ),
         ],
       ),

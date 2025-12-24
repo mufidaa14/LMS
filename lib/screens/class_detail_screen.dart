@@ -16,7 +16,7 @@ class _ClassDetailScreenState extends State<ClassDetailScreen> with SingleTicker
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this);
+    _tabController = TabController(length: 2, vsync: this);
   }
 
   @override
@@ -182,7 +182,7 @@ class _ClassDetailScreenState extends State<ClassDetailScreen> with SingleTicker
                     unselectedLabelColor: Colors.grey,
                     indicatorColor: primaryDark,
                     indicatorWeight: 3,
-                    tabs: const [Tab(text: 'Materi'), Tab(text: 'Tugas'), Tab(text: 'Kuis')],
+                    tabs: const [Tab(text: 'Materi'), Tab(text: 'Tugas Dan Kuis')],
                   ),
                 ),
 
@@ -192,8 +192,7 @@ class _ClassDetailScreenState extends State<ClassDetailScreen> with SingleTicker
                     controller: _tabController,
                     children: [
                       _buildMateriTab(context),
-                      _buildTugasTab(),
-                      _buildKuisTab(),
+                      _buildTugasDanKuisTab(),
                     ],
                   ),
                 ),
@@ -251,12 +250,222 @@ class _ClassDetailScreenState extends State<ClassDetailScreen> with SingleTicker
   }
 
   Widget _buildMateriTab(BuildContext context) {
-    return ListView(children: const [ListTile(title: Text("Materi 1"), leading: Icon(Icons.book))]);
+    // Data dummy sesuai screenshot (template untuk semua mata kuliah sementara)
+    final List<Map<String, dynamic>> meetings = [
+      {
+        'label': 'Pertemuan 1',
+        'title': '01 - Pengantar User Interface Design',
+        'desc': '3 URLs, 2 Files, 3 Interactive Content',
+        'isDone': false, // Belum selesai (Grey)
+      },
+      {
+        'label': 'Pertemuan 2',
+        'title': '02 - Konsep User Interface Design',
+        'desc': '2 URLs, 1 Kuis, 3 Files, 1 Tugas',
+        'isDone': true,
+      },
+      {
+        'label': 'Pertemuan 3',
+        'title': '03 - Interaksi pada User Interface Design',
+        'desc': '3 URLs, 2 Files, 3 Interactive Content',
+        'isDone': true,
+      },
+      {
+        'label': 'Pertemuan 4',
+        'title': '04 - Ethnographic Observation',
+        'desc': '3 URLs, 2 Files, 3 Interactive Content',
+        'isDone': true,
+      },
+      {
+        'label': 'Pertemuan 5',
+        'title': '05 - UID Testing',
+        'desc': '3 URLs, 2 Files, 3 Interactive Content',
+        'isDone': true,
+      },
+      {
+        'label': 'Pertemuan 6',
+        'title': '06 - Assessment 1',
+        'desc': '3 URLs, 2 Files, 3 Interactive Content',
+        'isDone': true,
+      },
+    ];
+
+    return ListView.builder(
+      padding: const EdgeInsets.all(20),
+      itemCount: meetings.length,
+      itemBuilder: (context, index) {
+        final item = meetings[index];
+        final bool isDone = item['isDone'];
+
+        return Container(
+          margin: const EdgeInsets.only(bottom: 16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.grey[200]!),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.05),
+                blurRadius: 5,
+                offset: const Offset(0, 2),
+              )
+            ],
+          ),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: () => _showMeetingDetail(context, item['title']),
+              borderRadius: BorderRadius.circular(12),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        // Badge Pertemuan
+                        Container(
+                           padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+                           decoration: BoxDecoration(
+                             color: const Color(0xFF64B5F6), // Light Blue like screenshot
+                             borderRadius: BorderRadius.circular(8),
+                           ),
+                           child: Text(
+                             item['label'],
+                             style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
+                           ),
+                        ),
+                        // Status Icon
+                        Icon(
+                          Icons.check_circle, 
+                          color: isDone ? const Color(0xFF43A047) : Colors.grey[300], // Green or Grey
+                          size: 24,
+                        )
+                      ],
+                    ),
+                    const SizedBox(height: 12),
+                    Text(
+                      item['title'],
+                      style: const TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black87),
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      item['desc'],
+                      style: TextStyle(fontSize: 12, color: Colors.grey[500]),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
   }
-  Widget _buildTugasTab() {
-    return ListView(children: const [ListTile(title: Text("Tugas 1"), leading: Icon(Icons.assignment))]);
-  }
-  Widget _buildKuisTab() {
-    return ListView(children: const [ListTile(title: Text("Kuis 1"), leading: Icon(Icons.quiz))]);
+  Widget _buildTugasDanKuisTab() {
+    final List<Map<String, dynamic>> tasks = [
+      {
+        'type': 'quiz',
+        'label': 'QUIZ',
+        'title': 'Quiz Review 01',
+        'deadline': '26 Februari 2021 23:59 WIB',
+        'isDone': true,
+      },
+      {
+        'type': 'tugas',
+        'label': 'Tugas',
+        'title': 'Tugas 01 - UID Android Mobile Game',
+        'deadline': '26 Februari 2021 23:59 WIB',
+        'isDone': false, // Grey check in screenshot looks like history/pending or just done visually different
+      },
+      {
+        'type': 'quiz',
+        'label': 'Pertemuan 3',
+        'title': 'Kuis - Assessment 2',
+        'deadline': '26 Februari 2021 23:59 WIB',
+        'isDone': true,
+      },
+    ];
+
+    return ListView.builder(
+      padding: const EdgeInsets.all(20),
+      itemCount: tasks.length,
+      itemBuilder: (context, index) {
+        final item = tasks[index];
+        final bool isQuiz = item['type'] == 'quiz';
+        
+        return Container(
+          margin: const EdgeInsets.only(bottom: 16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(12),
+            border: Border.all(color: Colors.grey[100]!), // Softer border
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.03),
+                blurRadius: 8,
+                offset: const Offset(0, 4),
+              )
+            ],
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    // Badge
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6), // Wider padding
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF64B5F6), // Light Blue
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Text(
+                        item['label'],
+                        style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    // Status Check
+                   Icon(
+                      Icons.check_circle,
+                      color: item['isDone'] ? const Color(0xFF43A047) : Colors.grey[400],
+                      size: 24,
+                    ),
+                  ],
+                ),
+                const SizedBox(height: 16),
+                
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    // Icon Main
+                    isQuiz 
+                    ? const Icon(Icons.quiz_outlined, size: 40, color: Colors.black87)
+                    : const Icon(Icons.assignment_outlined, size: 40, color: Colors.black87),
+
+                    const SizedBox(width: 16),
+                    Expanded(
+                      child: Text(
+                        item['title'],
+                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87),
+                      ),
+                    ),
+                  ],
+                ),
+                 const SizedBox(height: 16),
+                 Text(
+                   'Tenggat Waktu : ${item['deadline']}',
+                   style: TextStyle(fontSize: 11, color: Colors.grey[500]),
+                 )
+              ],
+            ),
+          ),
+        );
+      },
+    );
   }
 }
