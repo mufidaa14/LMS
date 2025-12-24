@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'document_viewer_screen.dart';
 import 'video_player_screen.dart';
+import 'quiz_detail_screen.dart';
 
 class ClassDetailScreen extends StatefulWidget {
   const ClassDetailScreen({super.key});
@@ -219,6 +220,12 @@ class _ClassDetailScreenState extends State<ClassDetailScreen> with SingleTicker
           content: 'Silahkan kerjakan kuis ini dalam waktu 15 menit sebagai nilai pertama komponen kuis. Jangan lupa klik tombol Submit Answer setelah menjawab seluruh pertanyaan. Kerjakan sebelum hari Jum\'at, 26 Februari 2021 jam 23:59 WIB.',
           icon: Icons.quiz_outlined,
           isCompleted: true,
+          onTap: () {
+             Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const QuizDetailScreen()),
+            );
+          },
         ),
         const SizedBox(height: 16),
         // Tugas Card
@@ -227,6 +234,9 @@ class _ClassDetailScreenState extends State<ClassDetailScreen> with SingleTicker
           content: '1. Buatlah desain tampilan (antarmuka) pada aplikasi mobile game FPS (First Person Shooter) yang akan menjadi tugas pada mata kuliah Pemrograman Aplikasi Permainan.\n2. Desain yang dibuat harus melingkupi seluruh tampilan pada aplikasi/game, dari pertama kali aplikasi ......',
           icon: Icons.assignment_outlined,
           isCompleted: false, // Grey check
+          onTap: () {
+             // Define task navigation if needed
+          },
         ),
       ],
     );
@@ -237,9 +247,12 @@ class _ClassDetailScreenState extends State<ClassDetailScreen> with SingleTicker
     required String content,
     required IconData icon,
     required bool isCompleted,
+    VoidCallback? onTap,
   }) {
-    return Container(
-      decoration: BoxDecoration(
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(16),
         border: Border.all(color: Colors.grey.shade300),
@@ -294,6 +307,7 @@ class _ClassDetailScreenState extends State<ClassDetailScreen> with SingleTicker
             ),
           ),
         ],
+      ),
       ),
     );
   }
@@ -655,6 +669,12 @@ class _ClassDetailScreenState extends State<ClassDetailScreen> with SingleTicker
              color: isDone ? Colors.green : Colors.grey[300],
              size: 20
           ),
+          onTap: () {
+            Navigator.push(
+              context,
+              MaterialPageRoute(builder: (context) => const QuizDetailScreen()),
+            );
+          },
         );
       },
     );
