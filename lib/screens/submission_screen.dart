@@ -87,9 +87,9 @@ class SubmissionScreen extends StatelessWidget {
 
                                       // Dashed Upload Area
                                       Padding(
-                                        padding: const EdgeInsets.symmetric(horizontal: 70.0),
-                                        child: AspectRatio(
-                                          aspectRatio: 1.4,
+                                        padding: const EdgeInsets.symmetric(horizontal: 50.0), // Wider overall area, but controlled height
+                                        child: SizedBox(
+                                          height: 220, // Fixed height, not too big
                                           child: CustomPaint(
                                             painter: DashedRectPainter(
                                               color: Colors.black54, 
@@ -106,17 +106,17 @@ class SubmissionScreen extends StatelessWidget {
                                                   // Asset Image
                                                   Image.asset(
                                                     'assets/images/aploud.PNG',
-                                                    height: 30,
+                                                    height: 100, // Significantly larger (was 30)
                                                     fit: BoxFit.contain,
                                                     errorBuilder: (context, error, stackTrace) {
                                                       return Icon(
                                                         Icons.cloud_upload_rounded, 
-                                                        size: 30, 
+                                                        size: 80, 
                                                         color: Colors.blue[400]
                                                       );
                                                     },
                                                   ),
-                                                  const SizedBox(height: 16),
+                                                  const SizedBox(height: 24),
                                                   Text(
                                                     'File yang akan di upload akan tampil di sini',
                                                     textAlign: TextAlign.center,

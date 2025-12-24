@@ -18,37 +18,37 @@ class TaskDetailScreen extends StatelessWidget {
        children: const [
           Text(
             '1. Buatlah desain tampilan (antarmuka) pada aplikasi mobile game FPS (First Person Shooter) yang akan menjadi tugas pada mata kuliah Pemrograman Aplikasi Permainan.',
-            style: TextStyle(fontSize: 13, height: 1.5, color: Colors.black87),
+            style: TextStyle(fontSize: 15, height: 1.5, color: Colors.black87),
             textAlign: TextAlign.justify,
           ),
           SizedBox(height: 12),
           Text(
             '2. Desain yang dibuat harus melingkupi seluruh tampilan pada aplikasi/game, dari pertama kali aplikasi dibuka sampai ditutup kembali, serta desain untuk tampilan-tampilan fungsi yang mendukung permainan seperti pop-up, alert, chat, dan lain-lain.',
-            style: TextStyle(fontSize: 13, height: 1.5, color: Colors.black87),
+            style: TextStyle(fontSize: 15, height: 1.5, color: Colors.black87),
             textAlign: TextAlign.justify,
           ),
           SizedBox(height: 12),
           Text(
             '3. Desain bisa dibuat menggunakan aplikasi khusus desain atau secara manual dengan tetap menjunjung kerapihan dan kejelasan setiap elemen dalam desain.',
-            style: TextStyle(fontSize: 13, height: 1.5, color: Colors.black87),
+            style: TextStyle(fontSize: 15, height: 1.5, color: Colors.black87),
             textAlign: TextAlign.justify,
           ),
           SizedBox(height: 12),
           Text(
             '4. Berikan identitas aplikasi game yang dibuat, seperti Nama Game, Genre, dan Platform. Serta berikan penjelasan pada setiap elemen pada desain, seperti gambar, teks, tombol, icon, dan lain-lain.',
-            style: TextStyle(fontSize: 13, height: 1.5, color: Colors.black87),
+            style: TextStyle(fontSize: 15, height: 1.5, color: Colors.black87),
             textAlign: TextAlign.justify,
           ),
           SizedBox(height: 12),
           Text(
             '5. File dikumpulkan dalam format .PDF dengan size maksimal 5MB.',
-            style: TextStyle(fontSize: 13, height: 1.5, color: Colors.black87),
+            style: TextStyle(fontSize: 15, height: 1.5, color: Colors.black87),
             textAlign: TextAlign.justify,
           ),
           SizedBox(height: 12),
           Text(
             '6. Tugas dikumpulkan paling lambat hari Jum\'at, 26 Februari 2021 jam 23:59 WIB (akan tertutup otomatis) dan akan dipresentasikan pada pertemuan selanjutnya via Zoom Meeting.',
-            style: TextStyle(fontSize: 13, height: 1.5, color: Colors.black87),
+            style: TextStyle(fontSize: 15, height: 1.5, color: Colors.black87),
             textAlign: TextAlign.justify,
           ),
        ]
@@ -79,7 +79,7 @@ class TaskDetailScreen extends StatelessWidget {
                 // If specific Tugas 01, show detailed list. Else show arg description
                 title.contains('01 - UID') ? tugas01Desc : Text(
                   descFromArgs.isNotEmpty ? descFromArgs : 'No Description', 
-                  style: const TextStyle(fontSize: 13, height: 1.5, color: Colors.black87),
+                  style: const TextStyle(fontSize: 15, height: 1.5, color: Colors.black87),
                   textAlign: TextAlign.justify
                 ),
                 

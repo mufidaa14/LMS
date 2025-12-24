@@ -191,13 +191,20 @@ class _ClassDetailScreenState extends State<ClassDetailScreen> with SingleTicker
               child: const Icon(Icons.check, size: 16, color: Colors.white),
             ),
             onTap: () {
-              Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => const DocumentViewerScreen(),
-                  settings: RouteSettings(arguments: {'title': item['title'], 'icon': item['icon']}),
-                ),
-              );
+              if (item['icon'] == Icons.video_collection_outlined) {
+                 Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const VideoPlayerScreen()),
+                );
+              } else {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => const DocumentViewerScreen(),
+                    settings: RouteSettings(arguments: {'title': item['title'], 'icon': item['icon']}),
+                  ),
+                );
+              }
             },
           ),
         );

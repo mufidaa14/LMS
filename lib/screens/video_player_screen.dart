@@ -113,10 +113,8 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                     ),
 
                   // 2. The Custom Overlay (UI DESIGN Text)
-                  // We remove the opaque background so the video (or placeholder) shows through.
-                  // We only add a slight tint for readability.
                   if (_showOverlay) ...[
-                    Container(color: Colors.black.withOpacity(0.3)), // Tint
+                    Container(color: Colors.black.withOpacity(0.4)), // Darker Tint for better contrast
                     
                     const Positioned(
                       child: Column(
@@ -126,7 +124,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                              'UI',
                              style: TextStyle(
                                color: Colors.white, 
-                               fontSize: 48, 
+                               fontSize: 60, // Larger
                                fontWeight: FontWeight.w900, 
                                letterSpacing: 4
                              ),
@@ -135,7 +133,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                              'DESIGN',
                              style: TextStyle(
                                color: Colors.white, 
-                               fontSize: 36, 
+                               fontSize: 40, // Larger
                                fontWeight: FontWeight.w900, 
                                letterSpacing: 8
                              ),
@@ -145,17 +143,17 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                     ),
                   ],
 
-                  // 3. Play Button (Always visible if not playing)
+                  // 3. Play Button
                   if (!_isPlaying)
                     GestureDetector(
                       onTap: _togglePlay,
                       child: Container(
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Colors.red.withOpacity(0.9),
+                          color: const Color(0xFFB71C1C).withOpacity(0.9), // Match App Red
                         ),
-                        padding: const EdgeInsets.all(12),
-                        child: const Icon(Icons.play_arrow, color: Colors.white, size: 50),
+                        padding: const EdgeInsets.all(16),
+                        child: const Icon(Icons.play_arrow, color: Colors.white, size: 40),
                       ),
                     ),
 
@@ -169,7 +167,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                           _controller, 
                           allowScrubbing: true,
                           colors: VideoProgressColors(
-                            playedColor: Colors.red,
+                            playedColor: const Color(0xFFB71C1C),
                             bufferedColor: Colors.white.withOpacity(0.5),
                             backgroundColor: Colors.white.withOpacity(0.3),
                           ),
@@ -177,12 +175,11 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                       : LinearProgressIndicator(
                           value: 0,
                           backgroundColor: Colors.white.withOpacity(0.3),
-                          color: Colors.red,
+                          color: const Color(0xFFB71C1C),
                           minHeight: 4,
                         ),
                   ),
                   
-                  // Tap anywhere to toggle play when overlay is gone/playing
                   if (!_showOverlay)
                     Positioned.fill(
                       child: GestureDetector(
@@ -205,11 +202,11 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
             
             // "Video Lain Nya" Header
             const Padding(
-              padding: EdgeInsets.fromLTRB(20, 20, 20, 12),
+              padding: EdgeInsets.fromLTRB(20, 24, 20, 16),
               child: Text(
                 'Video Lain Nya',
                 style: TextStyle(
-                  fontSize: 14,
+                  fontSize: 16,
                   fontWeight: FontWeight.bold,
                   color: Colors.black87,
                 ),
@@ -217,20 +214,17 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
             ),
             
             // List of Videos
-            // Removed Expanded, used shrinkWrap
             ListView(
               shrinkWrap: true,
               physics: const NeverScrollableScrollPhysics(),
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 0),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
               children: [
                 _buildVideoItem(
                   title: 'Interaction Design',
                   duration: '10:25',
                   thumbnailColor: const Color(0xFF5C6BC0), 
                   icon: Icons.person,
-                  onTap: () {
-                     ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Memutar video Interaction Design...")));
-                  }
+                  onTap: () {}
                 ),
                 _buildVideoItem(
                   title: 'Pengantar Desain Antarmuka Pengguna',
@@ -253,6 +247,7 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
                 ),
               ],
             ),
+            const SizedBox(height: 20),
           ],
         ),
       ),
@@ -272,69 +267,72 @@ class _VideoPlayerScreenState extends State<VideoPlayerScreen> {
       onTap: onTap,
       child: Container(
         margin: const EdgeInsets.only(bottom: 16),
-        padding: const EdgeInsets.all(0),
-        decoration: BoxDecoration(
-          color: Colors.grey[100], 
-          borderRadius: BorderRadius.circular(0),
-        ),
+        color: Colors.white, // Ensure background is white
         child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             // Thumbnail
-            Stack(
-              alignment: Alignment.bottomRight,
-              children: [
-                Container(
-                  width: 120,
-                  height: 70,
-                  color: thumbnailColor, 
-                  child: isTelkomStyle 
-                    ? Stack(
-                        children: [
-                          Positioned(
-                            top: 10, right: 10,
-                            child: Icon(Icons.school, color: Colors.red[900], size: 20)
-                          ),
-                          Positioned(
-                            bottom: 10, left: 10,
-                            child: Text("Telkom\nUniversity", style: TextStyle(fontSize: 8, color: Colors.black87, fontWeight: FontWeight.bold))
-                          )
-                        ],
-                      )
-                    : Center(
-                        child: Icon(icon ?? Icons.play_circle_fill, color: Colors.white54, size: 30),
-                      ),
-                ),
-                // Youtube Red Play Icon Overlay look-alike
-                Positioned.fill(
-                  child: Center(
-                    child: Container(
-                       width: 24, height: 16,
-                       decoration: BoxDecoration(
-                         color: Colors.red,
-                         borderRadius: BorderRadius.circular(4)
+            Container(
+              width: 140, // Wider thumbnail
+              height: 80,
+              decoration: BoxDecoration(
+                color: thumbnailColor,
+                boxShadow: [
+                  if (isTelkomStyle)
+                    BoxShadow(color: Colors.black.withOpacity(0.1), blurRadius: 4)
+                ]
+              ), 
+              child: isTelkomStyle 
+                ? Stack(
+                    children: [
+                       // Red bar at top left for style
+                       Positioned(top: 0, left: 0, child: Container(width: 40, height: 4, color: Colors.red)),
+                       Center(
+                         child: Column(
+                           mainAxisAlignment: MainAxisAlignment.center,
+                           children: [
+                             Icon(Icons.school, color: Colors.red[900], size: 28),
+                             const SizedBox(height: 4),
+                             const Text("Universitas\nTelkom", textAlign: TextAlign.center, style: TextStyle(fontSize: 10, color: Colors.black87, fontWeight: FontWeight.bold, height: 1.1))
+                           ],
+                         ),
                        ),
-                       child: const Icon(Icons.play_arrow, color: Colors.white, size: 12),
-                    ),
+                       // Play icon overlay
+                       Center(child: Icon(Icons.play_circle_fill, color: Colors.red.withOpacity(0.8), size: 32)),
+                    ],
                   )
-                ),
-              ],
+                : Stack(
+                    children: [
+                      Center(
+                        child: Icon(icon ?? Icons.play_circle_fill, color: Colors.white54, size: 40),
+                      ),
+                      // Duration badge
+                      Positioned(
+                        bottom: 4, right: 4,
+                        child: Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 4, vertical: 2),
+                          color: Colors.black87,
+                          child: Text(duration, style: const TextStyle(color: Colors.white, fontSize: 10)),
+                        ),
+                      )
+                    ]
+                  ),
             ),
             const SizedBox(width: 16),
             // Title
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Text(
                     title,
                     maxLines: 2,
                     overflow: TextOverflow.ellipsis,
                     style: const TextStyle(
-                      fontSize: 12,
+                      fontSize: 14,
                       fontWeight: FontWeight.w500,
                       color: Colors.black87,
+                      height: 1.3
                     ),
                   ),
                 ],
