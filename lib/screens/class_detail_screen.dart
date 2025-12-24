@@ -26,17 +26,59 @@ class _ClassDetailScreenState extends State<ClassDetailScreen> with SingleTicker
   }
 
   void _showMeetingDetail(BuildContext context, String title) {
-    final isMeeting2 = title.contains('Konsep User Interface Design');
-    final description = isMeeting2
-        ? 'Konsep dasar User Interface Design akan dipelajari bagaimana membangun sebuah Interaction Design pada antarmuka. Interaction ini sangat penting untuk aplikasi berkomunikasi dengan pengguna.'
-        : 'Antarmuka yang dibangun harus memperhatikan prinsip-prinsip desain yang ada. Hal ini diharapkan agar antarmuka yang dibangun bukan hanya menarik secara visual tetapi dengan memperhatikan kaidah-kaidah prinsip desain.';
+    // Logic to switch content based on meeting title
+    bool isMeeting2 = title.contains('02') || title.contains('Konsep');
+    
+    String description;
+    List<Map<String, dynamic>> materiData;
+    List<Map<String, dynamic>> tugasData;
+    
+    if (isMeeting2) {
+       description = "Konsep dasar User Interface Design akan dipelajari bagaimana membangun sebuah Interaction Design pada antarmuka. Interaction ini sangat penting untuk aplikasi berkomunikasi dengan pengguna. Lalu dipelajari juga poin-poin penting pada interaction design seperti visibility, feedback, limitation, consistency dan affordance. Dan terakhir materi conceptual dan perceptual design interaction akan memberikan gambaran bagaimana bentuk dari Interaction.";
+       materiData = [
+          {'icon': Icons.link, 'title': 'Zoom Meeting Syncronous', 'isDone': true},
+          {'icon': Icons.description_outlined, 'title': 'Elemen-elemen Antarmuka Pengguna', 'isDone': true},
+          {'icon': Icons.description_outlined, 'title': 'UID Guidelines and Principles', 'isDone': true},
+          {'icon': Icons.description_outlined, 'title': 'User Profile', 'isDone': true},
+          {'icon': Icons.link, 'title': 'Principles of User Interface DesignURL', 'isDone': true},
+       ];
+       tugasData = [
+          {
+            'type': 'quiz',
+            'title': 'Quiz Review 01',
+            'desc': 'Silahkan kerjakan kuis ini dalam waktu 15 menit sebagai nilai pertama komponen kuis. Jangan lupa klik tombol Submit Answer setelah menjawab seluruh pertanyaan.',
+            'deadline': 'Tenggat Waktu : 26 Februari 2021 23:59 WIB',
+            'isDone': true
+          },
+          {
+            'type': 'tugas',
+            'title': 'Tugas 01 - UID Android Mobile Game',
+            'desc': '1. Buatlah desain tampilan (antarmuka) pada aplikasi mobile game FPS (First Person Shooter) yang akan menjadi tugas pada mata kuliah Pemrograman Aplikasi Permainan.\n2. Desain yang dibuat harus melingkupi seluruh tampilan pada aplikasi/game, dari pertama kali aplikasi .............',
+            'deadline': 'Tenggat Waktu : 26 Februari 2021 23:59 WIB',
+            'isDone': false
+          }
+       ];
+    } else {
+       // Default / Meeting 1 (Pengantar)
+       description = 'Antarmuka yang dibangun harus memperhatikan prinsip-prinsip desain yang ada. Hal ini diharapkan agar antarmuka yang dibangun bukan hanya menarik secara visual tetapi dengan memperhatikan kaidah-kaidah prinsip desain diharapkan akan mendukung pengguna dalam menggunakan produk secara baik. Pelajaran mengenai prinsip UID ini sudah pernah diajarkan dalam mata kuliah Implementasi Desain Antarmuka Pengguna tetap pada matakuliah ini akan direview kembali sehingga dapat menjadi bekal saat memasukki materi mengenai User Experience';
+       materiData = [
+          {'icon': Icons.link, 'title': 'Zoom Meeting Syncronous', 'isDone': true},
+          {'icon': Icons.description_outlined, 'title': 'Pengantar User Interface Design', 'isDone': false},
+          {'icon': Icons.description_outlined, 'title': 'Empat Teori Dasar Antarmuka Pengguna', 'isDone': false},
+          {'icon': Icons.description_outlined, 'title': 'Empat Teori Dasar Antarmuka Pengguna', 'isDone': true},
+          {'icon': Icons.video_collection_outlined, 'title': 'User Interface Design for Beginner', 'isDone': true},
+          {'icon': Icons.link, 'title': '20 Prinsip Desain', 'isDone': true},
+          {'icon': Icons.link, 'title': 'Best Practice UI Design', 'isDone': true},
+       ];
+       tugasData = []; 
+    }
 
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Colors.transparent,
       builder: (context) => DraggableScrollableSheet(
-        initialChildSize: 0.8,
+        initialChildSize: 0.9,
         minChildSize: 0.5,
         maxChildSize: 0.95,
         builder: (_, controller) => Container(
@@ -60,10 +102,32 @@ class _ClassDetailScreenState extends State<ClassDetailScreen> with SingleTicker
                       Padding(
                         padding: const EdgeInsets.all(20),
                         child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisSize: MainAxisSize.min, // Use min size
                           children: [
-                            Text(isMeeting2 ? 'Konsep User Interface Design' : title, style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold), textAlign: TextAlign.center),
-                            const SizedBox(height: 12),
-                            Text(description, style: const TextStyle(fontSize: 12, color: Colors.black87, height: 1.5), textAlign: TextAlign.justify),
+                            Center(
+                              child: Text(
+                                title.replaceAll(RegExp(r'^\d+ - '), ''), 
+                                style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold), 
+                                textAlign: TextAlign.center
+                              ),
+                            ),
+                            const SizedBox(height: 20),
+                            const Text("Deskripsi", style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                            const SizedBox(height: 8),
+                            // Fix Overflow: Wrap description in flexible scrollable container
+                            Container(
+                              constraints: BoxConstraints(
+                                maxHeight: MediaQuery.of(context).size.height * 0.25 // Max 25% of screen height
+                              ), 
+                              child: SingleChildScrollView(
+                                child: Text(
+                                  description, 
+                                  style: const TextStyle(fontSize: 13, color: Colors.black87, height: 1.5), 
+                                  textAlign: TextAlign.justify
+                                ),
+                              ),
+                            ),
                           ],
                         ),
                       ),
@@ -71,13 +135,15 @@ class _ClassDetailScreenState extends State<ClassDetailScreen> with SingleTicker
                         labelColor: Color(0xFF800000),
                         unselectedLabelColor: Colors.grey,
                         indicatorColor: Color(0xFF800000),
-                        tabs: [Tab(text: 'Materi'), Tab(text: 'Tugas')],
+                        indicatorWeight: 3,
+                        labelStyle: TextStyle(fontWeight: FontWeight.bold),
+                        tabs: [Tab(text: 'Lampiran Materi'), Tab(text: 'Tugas dan Kuis')],
                       ),
                       Expanded(
                         child: TabBarView(
                           children: [
-                            _buildLampiranList(controller, isMeeting2),
-                            isMeeting2 ? _buildTugasKuisPopulated(controller) : _buildTugasEmptyState(),
+                            _buildLampiranList(controller, materiData),
+                            tugasData.isNotEmpty ? _buildTugasList(controller, tugasData) : _buildTugasEmptyState(controller),
                           ],
                         ),
                       ),
@@ -92,36 +158,181 @@ class _ClassDetailScreenState extends State<ClassDetailScreen> with SingleTicker
     );
   }
 
-  Widget _buildLampiranList(ScrollController controller, bool isMeeting2) {
-    final items = isMeeting2
-        ? [{'icon': Icons.link, 'title': 'Zoom Meeting', 'type': 'link'}, {'icon': Icons.article, 'title': 'Materi PDF', 'type': 'doc'}]
-        : [{'icon': Icons.link, 'title': 'Zoom Meeting', 'type': 'link'}, {'icon': Icons.picture_as_pdf, 'title': 'Pengantar UI', 'type': 'pdf'}];
-
+  Widget _buildLampiranList(ScrollController controller, List<Map<String, dynamic>> items) {
     return ListView.builder(
       controller: controller,
       padding: const EdgeInsets.all(20),
       itemCount: items.length,
       itemBuilder: (context, index) {
         final item = items[index];
-        return ListTile(
-          leading: Icon(item['icon'] as IconData, color: const Color(0xFF800000)),
-          title: Text(item['title'] as String),
-          onTap: () {},
+        final bool isDone = item['isDone'] as bool;
+        
+        return Container(
+          margin: const EdgeInsets.only(bottom: 12),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(30),
+            border: Border.all(color: Colors.grey[300]!),
+          ),
+          child: ListTile(
+            contentPadding: const EdgeInsets.symmetric(horizontal: 20, vertical: 4),
+            leading: Icon(item['icon'] as IconData, color: Colors.black87),
+            title: Text(
+              item['title'] as String,
+              style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+            ),
+            trailing: Container(
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                color: isDone ? const Color(0xFF00E676) : Colors.grey[300],
+              ),
+              padding: const EdgeInsets.all(2),
+              child: const Icon(Icons.check, size: 16, color: Colors.white),
+            ),
+            onTap: () {},
+          ),
         );
       },
     );
   }
 
-  Widget _buildTugasKuisPopulated(ScrollController controller) {
-    return ListView(
+  Widget _buildTugasList(ScrollController controller, List<Map<String, dynamic>> tasks) {
+    return ListView.builder(
       controller: controller,
       padding: const EdgeInsets.all(20),
-      children: const [ListTile(title: Text("Kuis 1"), leading: Icon(Icons.quiz))],
+      itemCount: tasks.length,
+      itemBuilder: (context, index) {
+        final task = tasks[index];
+        bool isQuiz = task['type'] == 'quiz';
+
+        return Container(
+          margin: const EdgeInsets.only(bottom: 20),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(20),
+            border: Border.all(color: Colors.grey[200]!),
+            boxShadow: [
+              BoxShadow(
+                color: Colors.black.withOpacity(0.05), 
+                blurRadius: 10, 
+                offset: const Offset(0, 4)
+              )
+            ],
+          ),
+          child: IntrinsicHeight(
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                 // Left Indicator
+                 Container(
+                   width: 80,
+                   decoration: BoxDecoration(
+                     border: Border(right: BorderSide(color: Colors.grey[100]!)),
+                   ),
+                   child: Column(
+                     mainAxisAlignment: MainAxisAlignment.center,
+                     children: [
+                       if (isQuiz)
+                        const Icon(Icons.chat_bubble_outline_rounded, size: 28)
+                       else 
+                        const Icon(Icons.assignment_outlined, size: 28),
+                       
+                       const SizedBox(height: 4),
+                       Container(
+                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                         decoration: BoxDecoration(
+                           color: isQuiz ? Colors.blue[400] : Colors.blue[400],
+                           borderRadius: BorderRadius.circular(4)
+                         ),
+                         child: Text(
+                           isQuiz ? "Quiz" : "Tugas",
+                           style: const TextStyle(fontSize: 10, color: Colors.white, fontWeight: FontWeight.bold),
+                         ),
+                       )
+                     ],
+                   ),
+                 ),
+                 
+                 // Content
+                 Expanded(
+                   child: Padding(
+                     padding: const EdgeInsets.all(16),
+                     child: Column(
+                       crossAxisAlignment: CrossAxisAlignment.start,
+                       children: [
+                         Row(
+                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                           children: [
+                             Expanded(
+                               child: Text(
+                                 task['title'], 
+                                 style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)
+                               ),
+                             ),
+                             Icon(
+                               Icons.check_circle, 
+                               color: task['isDone'] ? const Color(0xFF00E676) : Colors.grey[300],
+                               size: 22,
+                             )
+                           ],
+                         ),
+                         const SizedBox(height: 8),
+                         Text(
+                           task['desc'],
+                           style: const TextStyle(fontSize: 12, color: Colors.black87, height: 1.4),
+                         ),
+                         const SizedBox(height: 12),
+                         Text(
+                           task['deadline'],
+                           style: TextStyle(fontSize: 11, color: Colors.grey[500]),
+                         )
+                       ],
+                     ),
+                   ),
+                 )
+              ],
+            ),
+          ),
+        );
+      },
     );
   }
 
-  Widget _buildTugasEmptyState() {
-    return const Center(child: Text("Tidak ada tugas"));
+  Widget _buildTugasEmptyState([ScrollController? controller]) {
+    return ListView(
+      controller: controller,
+      children: [
+        SizedBox(height: MediaQuery.of(context).size.height * 0.1), // Top spacing
+        Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              // Illustration Placeholder (Use a network image or asset if available)
+              Container(
+                width: 250, 
+                height: 250,
+                decoration: BoxDecoration(
+                  image: const DecorationImage(
+                    image: AssetImage('assets/images/empty_state_girl.png'), 
+                    fit: BoxFit.contain,
+                  ),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+              ),
+              const SizedBox(height: 20),
+              const Text(
+                "Tidak Ada Tugas Dan Kuis Hari Ini",
+                style: TextStyle(
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black87,
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
   }
 
   @override
@@ -191,7 +402,7 @@ class _ClassDetailScreenState extends State<ClassDetailScreen> with SingleTicker
                   child: TabBarView(
                     controller: _tabController,
                     children: [
-                      _buildMateriTab(context),
+                      _buildMateriTab(context, args['name'] ?? ''),
                       _buildTugasDanKuisTab(),
                     ],
                   ),
@@ -249,46 +460,58 @@ class _ClassDetailScreenState extends State<ClassDetailScreen> with SingleTicker
     );
   }
 
-  Widget _buildMateriTab(BuildContext context) {
-    // Data dummy sesuai screenshot (template untuk semua mata kuliah sementara)
-    final List<Map<String, dynamic>> meetings = [
-      {
-        'label': 'Pertemuan 1',
-        'title': '01 - Pengantar User Interface Design',
-        'desc': '3 URLs, 2 Files, 3 Interactive Content',
-        'isDone': false, // Belum selesai (Grey)
-      },
-      {
-        'label': 'Pertemuan 2',
-        'title': '02 - Konsep User Interface Design',
-        'desc': '2 URLs, 1 Kuis, 3 Files, 1 Tugas',
-        'isDone': true,
-      },
-      {
-        'label': 'Pertemuan 3',
-        'title': '03 - Interaksi pada User Interface Design',
-        'desc': '3 URLs, 2 Files, 3 Interactive Content',
-        'isDone': true,
-      },
-      {
-        'label': 'Pertemuan 4',
-        'title': '04 - Ethnographic Observation',
-        'desc': '3 URLs, 2 Files, 3 Interactive Content',
-        'isDone': true,
-      },
-      {
-        'label': 'Pertemuan 5',
-        'title': '05 - UID Testing',
-        'desc': '3 URLs, 2 Files, 3 Interactive Content',
-        'isDone': true,
-      },
-      {
-        'label': 'Pertemuan 6',
-        'title': '06 - Assessment 1',
-        'desc': '3 URLs, 2 Files, 3 Interactive Content',
-        'isDone': true,
-      },
-    ];
+  Widget _buildMateriTab(BuildContext context, String courseName) {
+    List<Map<String, dynamic>> meetings = [];
+
+    if (courseName.contains('SISTEM CERDAS')) {
+      meetings = [
+        {'label': 'Pertemuan 1', 'title': '01 - Pengantar Kecerdasan Buatan', 'desc': '3 URLs, 2 Files', 'isDone': true},
+        {'label': 'Pertemuan 2', 'title': '02 - Representasi Pengetahuan', 'desc': '2 URLs, 1 Kuis, 1 Tugas', 'isDone': true},
+        {'label': 'Pertemuan 3', 'title': '03 - Sistem Pakar', 'desc': '3 URLs, 2 Files', 'isDone': true},
+        {'label': 'Pertemuan 4', 'title': '04 - Logika Fuzzy', 'desc': '2 URLs, 1 Files', 'isDone': true},
+        {'label': 'Pertemuan 5', 'title': '05 - Jaringan Saraf Tiruan', 'desc': '3 URLs, 2 Files', 'isDone': false},
+        {'label': 'Pertemuan 6', 'title': '06 - Algoritma Genetika', 'desc': '2 URLs, 1 Files', 'isDone': false},
+      ];
+    } else if (courseName.contains('SEMINAR')) {
+      meetings = [
+        {'label': 'Pertemuan 1', 'title': '01 - Pengantar & Metodologi Riset', 'desc': '2 Files, 1 Link', 'isDone': true},
+        {'label': 'Pertemuan 2', 'title': '02 - Penulisan Proposal TA', 'desc': '1 URLs, 1 Tugas', 'isDone': true},
+        {'label': 'Pertemuan 3', 'title': '03 - Studi Literatur', 'desc': '3 URLs, 1 Files', 'isDone': true},
+        {'label': 'Pertemuan 4', 'title': '04 - Teknik Presentasi Ilmiah', 'desc': '2 Files', 'isDone': true},
+        {'label': 'Pertemuan 5', 'title': '05 - Persiapan Seminar', 'desc': '1 URLs, 1 Files', 'isDone': false},
+      ];
+    } else if (courseName.contains('CYBER')) {
+      meetings = [
+        {'label': 'Pertemuan 1', 'title': '01 - Konsep Dasar Keamanan', 'desc': '3 URLs, 2 Files', 'isDone': true},
+        {'label': 'Pertemuan 2', 'title': '02 - Kriptografi Dasar', 'desc': '2 URLs, 1 Kuis', 'isDone': true},
+        {'label': 'Pertemuan 3', 'title': '03 - Keamanan Jaringan', 'desc': '3 URLs, 2 Files', 'isDone': true},
+        {'label': 'Pertemuan 4', 'title': '04 - Malware & Ancaman Siber', 'desc': '2 URLs', 'isDone': false},
+        {'label': 'Pertemuan 5', 'title': '05 - Ethical Hacking', 'desc': '3 URLs, 1 Files', 'isDone': false},
+      ];
+    } else if (courseName.contains('MOBILE')) {
+      meetings = [
+        {'label': 'Pertemuan 1', 'title': '01 - Review Flutter Basic', 'desc': '3 URLs, 2 Files', 'isDone': true},
+        {'label': 'Pertemuan 2', 'title': '02 - State Management (Provider)', 'desc': '2 GitHub, 1 Video', 'isDone': true},
+        {'label': 'Pertemuan 3', 'title': '03 - REST API Integration', 'desc': '3 URLs, 1 Quiz', 'isDone': true},
+        {'label': 'Pertemuan 4', 'title': '04 - Local Storage (Hive/SQLite)', 'desc': '2 URLs, 1 Code', 'isDone': false},
+        {'label': 'Pertemuan 5', 'title': '05 - Firebase Integration', 'desc': '3 URLs, 1 Config', 'isDone': false},
+      ];
+    } else if (courseName.contains('GEOGRAFIS')) {
+      meetings = [
+        {'label': 'Pertemuan 1', 'title': '01 - Pengantar SIG', 'desc': '2 Files, 1 Video', 'isDone': true},
+        {'label': 'Pertemuan 2', 'title': '02 - Sistem Koordinat & Proyeksi', 'desc': '2 Maps, 1 File', 'isDone': true},
+        {'label': 'Pertemuan 3', 'title': '03 - Model Data Spasial', 'desc': '3 Files', 'isDone': true},
+        {'label': 'Pertemuan 4', 'title': '04 - Digitasi Peta & Input Data', 'desc': '1 App, 2 Files', 'isDone': false},
+        {'label': 'Pertemuan 5', 'title': '05 - Analisis Spasial Dasar', 'desc': '2 URLs, 1 Files', 'isDone': false},
+      ];
+    } else {
+      // Default Fallback
+       meetings = [
+        {'label': 'Pertemuan 1', 'title': '01 - Pengantar Mata Kuliah', 'desc': 'Silabus & Kontrak Kuliah', 'isDone': true},
+        {'label': 'Pertemuan 2', 'title': '02 - Teori Dasar', 'desc': 'Materi Dasar 1', 'isDone': true},
+        {'label': 'Pertemuan 3', 'title': '03 - Pendalaman Materi', 'desc': 'Studi Kasus', 'isDone': false},
+      ];
+    }
 
     return ListView.builder(
       padding: const EdgeInsets.all(20),
