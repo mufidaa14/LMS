@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'document_viewer_screen.dart';
 import 'video_player_screen.dart';
 import 'quiz_detail_screen.dart';
+import 'task_detail_screen.dart';
 
 class ClassDetailScreen extends StatefulWidget {
   const ClassDetailScreen({super.key});
@@ -189,7 +190,15 @@ class _ClassDetailScreenState extends State<ClassDetailScreen> with SingleTicker
               padding: const EdgeInsets.all(2),
               child: const Icon(Icons.check, size: 16, color: Colors.white),
             ),
-            onTap: () {},
+            onTap: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const DocumentViewerScreen(),
+                  settings: RouteSettings(arguments: {'title': item['title'], 'icon': item['icon']}),
+                ),
+              );
+            },
           ),
         );
       },
@@ -205,92 +214,107 @@ class _ClassDetailScreenState extends State<ClassDetailScreen> with SingleTicker
         final task = tasks[index];
         bool isQuiz = task['type'] == 'quiz';
 
-        return Container(
-          margin: const EdgeInsets.only(bottom: 20),
-          decoration: BoxDecoration(
-            color: Colors.white,
-            borderRadius: BorderRadius.circular(20),
-            border: Border.all(color: Colors.grey[200]!),
-            boxShadow: [
-              BoxShadow(
-                color: Colors.black.withOpacity(0.05), 
-                blurRadius: 10, 
-                offset: const Offset(0, 4)
-              )
-            ],
-          ),
-          child: IntrinsicHeight(
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: [
-                 // Left Indicator
-                 Container(
-                   width: 80,
-                   decoration: BoxDecoration(
-                     border: Border(right: BorderSide(color: Colors.grey[100]!)),
-                   ),
-                   child: Column(
-                     mainAxisAlignment: MainAxisAlignment.center,
-                     children: [
-                       if (isQuiz)
-                        const Icon(Icons.chat_bubble_outline_rounded, size: 28)
-                       else 
-                        const Icon(Icons.assignment_outlined, size: 28),
-                       
-                       const SizedBox(height: 4),
-                       Container(
-                         padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
-                         decoration: BoxDecoration(
-                           color: isQuiz ? Colors.blue[400] : Colors.blue[400],
-                           borderRadius: BorderRadius.circular(4)
-                         ),
-                         child: Text(
-                           isQuiz ? "Quiz" : "Tugas",
-                           style: const TextStyle(fontSize: 10, color: Colors.white, fontWeight: FontWeight.bold),
-                         ),
-                       )
-                     ],
-                   ),
-                 ),
-                 
-                 // Content
-                 Expanded(
-                   child: Padding(
-                     padding: const EdgeInsets.all(16),
+        return GestureDetector(
+          onTap: () {
+             if (isQuiz) {
+               // Quiz navigation can be added here if needed
+             } else {
+               Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => const TaskDetailScreen(),
+                  settings: RouteSettings(arguments: task),
+                ),
+              );
+             }
+          },
+          child: Container(
+            margin: const EdgeInsets.only(bottom: 20),
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(20),
+              border: Border.all(color: Colors.grey[200]!),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.05), 
+                  blurRadius: 10, 
+                  offset: const Offset(0, 4)
+                )
+              ],
+            ),
+            child: IntrinsicHeight(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                   // Left Indicator
+                   Container(
+                     width: 80,
+                     decoration: BoxDecoration(
+                       border: Border(right: BorderSide(color: Colors.grey[100]!)),
+                     ),
                      child: Column(
-                       crossAxisAlignment: CrossAxisAlignment.start,
+                       mainAxisAlignment: MainAxisAlignment.center,
                        children: [
-                         Row(
-                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                           children: [
-                             Expanded(
-                               child: Text(
-                                 task['title'], 
-                                 style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)
-                               ),
-                             ),
-                             Icon(
-                               Icons.check_circle, 
-                               color: task['isDone'] ? const Color(0xFF00E676) : Colors.grey[300],
-                               size: 22,
-                             )
-                           ],
-                         ),
-                         const SizedBox(height: 8),
-                         Text(
-                           task['desc'],
-                           style: const TextStyle(fontSize: 12, color: Colors.black87, height: 1.4),
-                         ),
-                         const SizedBox(height: 12),
-                         Text(
-                           task['deadline'],
-                           style: TextStyle(fontSize: 11, color: Colors.grey[500]),
+                         if (isQuiz)
+                          const Icon(Icons.chat_bubble_outline_rounded, size: 28)
+                         else 
+                          const Icon(Icons.assignment_outlined, size: 28),
+                         
+                         const SizedBox(height: 4),
+                         Container(
+                           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 2),
+                           decoration: BoxDecoration(
+                             color: isQuiz ? Colors.blue[400] : Colors.blue[400],
+                             borderRadius: BorderRadius.circular(4)
+                           ),
+                           child: Text(
+                             isQuiz ? "Quiz" : "Tugas",
+                             style: const TextStyle(fontSize: 10, color: Colors.white, fontWeight: FontWeight.bold),
+                           ),
                          )
                        ],
                      ),
                    ),
-                 )
-              ],
+                   
+                   // Content
+                   Expanded(
+                     child: Padding(
+                       padding: const EdgeInsets.all(16),
+                       child: Column(
+                         crossAxisAlignment: CrossAxisAlignment.start,
+                         children: [
+                           Row(
+                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                             children: [
+                               Expanded(
+                                 child: Text(
+                                   task['title'], 
+                                   style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)
+                                 ),
+                               ),
+                               Icon(
+                                 Icons.check_circle, 
+                                 color: task['isDone'] ? const Color(0xFF00E676) : Colors.grey[300],
+                                 size: 22,
+                               )
+                             ],
+                           ),
+                           const SizedBox(height: 8),
+                           Text(
+                             task['desc'],
+                             style: const TextStyle(fontSize: 12, color: Colors.black87, height: 1.4),
+                           ),
+                           const SizedBox(height: 12),
+                           Text(
+                             task['deadline'],
+                             style: TextStyle(fontSize: 11, color: Colors.grey[500]),
+                           )
+                         ],
+                       ),
+                     ),
+                   )
+                ],
+              ),
             ),
           ),
         );

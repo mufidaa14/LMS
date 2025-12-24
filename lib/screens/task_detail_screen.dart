@@ -6,8 +6,53 @@ class TaskDetailScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // In a real app, arguments would be passed here
-    // final args = ModalRoute.of(context)?.settings.arguments;
+    final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>? ?? {};
+    final String title = args['title'] ?? 'Tugas 01 - UID Android Mobile Game';
+    final String deadline = args['deadline'] ?? '26 Februari 2021 23:59 WIB';
+    final bool isDone = args['isDone'] ?? false;
+    final String descFromArgs = args['desc'] ?? '';
+
+    // Hardcoded long description for Tugas 01
+    final Widget tugas01Desc = Column(
+       crossAxisAlignment: CrossAxisAlignment.start,
+       children: const [
+          Text(
+            '1. Buatlah desain tampilan (antarmuka) pada aplikasi mobile game FPS (First Person Shooter) yang akan menjadi tugas pada mata kuliah Pemrograman Aplikasi Permainan.',
+            style: TextStyle(fontSize: 13, height: 1.5, color: Colors.black87),
+            textAlign: TextAlign.justify,
+          ),
+          SizedBox(height: 12),
+          Text(
+            '2. Desain yang dibuat harus melingkupi seluruh tampilan pada aplikasi/game, dari pertama kali aplikasi dibuka sampai ditutup kembali, serta desain untuk tampilan-tampilan fungsi yang mendukung permainan seperti pop-up, alert, chat, dan lain-lain.',
+            style: TextStyle(fontSize: 13, height: 1.5, color: Colors.black87),
+            textAlign: TextAlign.justify,
+          ),
+          SizedBox(height: 12),
+          Text(
+            '3. Desain bisa dibuat menggunakan aplikasi khusus desain atau secara manual dengan tetap menjunjung kerapihan dan kejelasan setiap elemen dalam desain.',
+            style: TextStyle(fontSize: 13, height: 1.5, color: Colors.black87),
+            textAlign: TextAlign.justify,
+          ),
+          SizedBox(height: 12),
+          Text(
+            '4. Berikan identitas aplikasi game yang dibuat, seperti Nama Game, Genre, dan Platform. Serta berikan penjelasan pada setiap elemen pada desain, seperti gambar, teks, tombol, icon, dan lain-lain.',
+            style: TextStyle(fontSize: 13, height: 1.5, color: Colors.black87),
+            textAlign: TextAlign.justify,
+          ),
+          SizedBox(height: 12),
+          Text(
+            '5. File dikumpulkan dalam format .PDF dengan size maksimal 5MB.',
+            style: TextStyle(fontSize: 13, height: 1.5, color: Colors.black87),
+            textAlign: TextAlign.justify,
+          ),
+          SizedBox(height: 12),
+          Text(
+            '6. Tugas dikumpulkan paling lambat hari Jum\'at, 26 Februari 2021 jam 23:59 WIB (akan tertutup otomatis) dan akan dipresentasikan pada pertemuan selanjutnya via Zoom Meeting.',
+            style: TextStyle(fontSize: 13, height: 1.5, color: Colors.black87),
+            textAlign: TextAlign.justify,
+          ),
+       ]
+    );
 
     return Scaffold(
       backgroundColor: Colors.white,
@@ -17,9 +62,10 @@ class TaskDetailScreen extends StatelessWidget {
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
-          'Tugas 01 - UID Android Mobile Game',
-          style: TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+        title: Text(
+          title,
+          style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.bold),
+          overflow: TextOverflow.ellipsis,
         ),
       ),
       body: Stack(
@@ -30,40 +76,11 @@ class TaskDetailScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Instructions / Description
-                const Text(
-                  '1. Buatlah desain tampilan (antarmuka) pada aplikasi mobile game FPS (First Person Shooter) yang akan menjadi tugas pada mata kuliah Pemrograman Aplikasi Permainan.',
-                  style: TextStyle(fontSize: 13, height: 1.5, color: Colors.black87),
-                  textAlign: TextAlign.justify,
-                ),
-                const SizedBox(height: 12),
-                const Text(
-                  '2. Desain yang dibuat harus melingkupi seluruh tampilan pada aplikasi/game, dari pertama kali aplikasi dibuka sampai ditutup kembali, serta desain untuk tampilan-tampilan fungsi yang mendukung permainan seperti pop-up, alert, chat, dan lain-lain.',
-                  style: TextStyle(fontSize: 13, height: 1.5, color: Colors.black87),
-                  textAlign: TextAlign.justify,
-                ),
-                const SizedBox(height: 12),
-                const Text(
-                  '3. Desain bisa dibuat menggunakan aplikasi khusus desain atau secara manual dengan tetap menjunjung kerapihan dan kejelasan setiap elemen dalam desain.',
-                  style: TextStyle(fontSize: 13, height: 1.5, color: Colors.black87),
-                  textAlign: TextAlign.justify,
-                ),
-                const SizedBox(height: 12),
-                const Text(
-                  '4. Berikan identitas aplikasi game yang dibuat, seperti Nama Game, Genre, dan Platform. Serta berikan penjelasan pada setiap elemen pada desain, seperti gambar, teks, tombol, icon, dan lain-lain.',
-                  style: TextStyle(fontSize: 13, height: 1.5, color: Colors.black87),
-                  textAlign: TextAlign.justify,
-                ),
-                const SizedBox(height: 12),
-                const Text(
-                  '5. File dikumpulkan dalam format .PDF dengan size maksimal 5MB.',
-                  style: TextStyle(fontSize: 13, height: 1.5, color: Colors.black87),
-                  textAlign: TextAlign.justify,
-                ),
-                const SizedBox(height: 12),
-                const Text(
-                  '6. Tugas dikumpulkan paling lambat hari Jum\'at, 26 Februari 2021 jam 23:59 WIB (akan tertutup otomatis) dan akan dipresentasikan pada pertemuan selanjutnya via Zoom Meeting.',
-                  style: TextStyle(fontSize: 13, height: 1.5, color: Colors.black87),
-                  textAlign: TextAlign.justify,
+                // If specific Tugas 01, show detailed list. Else show arg description
+                title.contains('01 - UID') ? tugas01Desc : Text(
+                  descFromArgs.isNotEmpty ? descFromArgs : 'No Description', 
+                  style: const TextStyle(fontSize: 13, height: 1.5, color: Colors.black87),
+                  textAlign: TextAlign.justify
                 ),
                 
                 const SizedBox(height: 30),
@@ -95,16 +112,17 @@ class TaskDetailScreen extends StatelessWidget {
                         ),
                         child: Column(
                           children: [
-                             _buildStatusRow('Status', 'Sudah Mengirim untuk di nilai', isFirst: true),
+                             _buildStatusRow('Status', isDone ? 'Sudah Mengirim untuk di nilai' : 'Belum Mengirim', isFirst: true),
                              _buildStatusRow('Status Nilai', 'Belum Di nilai'),
-                             _buildStatusRow('Batas tanggal', 'Jumat, 26 Februari 2021, 23:59 WIB'),
-                             _buildStatusRow('Sisa Waktu', 'Tugas sudah dikirim 4 Hari 3 Jam sebelum nya'),
-                             _buildStatusRow(
-                               'File Tugas', 
-                               'Dandy Candra Pratama_770817394.pdf', 
-                               isFile: true,
-                               isLast: true
-                             ),
+                             _buildStatusRow('Batas tanggal', deadline.replaceAll('Tenggat Waktu : ', '')), // Clean string if needed
+                             _buildStatusRow('Sisa Waktu', isDone ? 'Tugas sudah dikirim' : '-'),
+                             if (isDone)
+                               _buildStatusRow(
+                                 'File Tugas', 
+                                 'Dandy Candra Pratama_770817394.pdf', 
+                                 isFile: true,
+                                 isLast: true
+                               ),
                           ],
                         ),
                       ),
