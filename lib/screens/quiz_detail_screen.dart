@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'quiz_attempt_screen.dart';
 
 class QuizDetailScreen extends StatelessWidget {
   const QuizDetailScreen({super.key});
@@ -170,7 +171,10 @@ class QuizDetailScreen extends StatelessWidget {
                   height: 45,
                   child: ElevatedButton(
                     onPressed: () {
-                      // Action to take quiz (Future task)
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(builder: (context) => const QuizAttemptScreen()),
+                      );
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.grey[200],
