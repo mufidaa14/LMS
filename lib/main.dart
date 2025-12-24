@@ -10,6 +10,7 @@ import 'screens/announcement_list_screen.dart';
 import 'screens/announcement_detail_screen.dart';
 import 'screens/class_list_screen.dart';
 import 'screens/class_detail_screen.dart';
+import 'screens/task_detail_screen.dart';
 
 void main() {
   runApp(const MyApp());
@@ -40,6 +41,7 @@ class MyApp extends StatelessWidget {
         '/announcement_detail': (context) => const AnnouncementDetailScreen(),
         '/class_list': (context) => const ClassListScreen(),
         '/class_detail': (context) => const ClassDetailScreen(),
+        '/task_detail': (context) => const TaskDetailScreen(),
       },
     );
   }

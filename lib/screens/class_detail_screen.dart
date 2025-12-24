@@ -22,12 +22,300 @@ class _ClassDetailScreenState extends State<ClassDetailScreen> with SingleTicker
     super.dispose();
   }
 
+  void _showMeetingDetail(BuildContext context, String title) {
+    // Determine if we are on the specific "Konsep User Interface Design" meeting
+    final isMeeting2 = title.contains('Konsep User Interface Design');
+
+    // Specific Description for Meeting 2
+    final description = isMeeting2
+        ? 'Konsep dasar User Interface Design akan dipelajari bagaimana membangun sebuah Interaction Design pada antarmuka. Interaction ini sangat penting untuk aplikasi berkomunikasi dengan pengguna. Lalu dipelajari juga poin-poin penting pada interaction design seperti visibility, feedback, limitation, consistency dan affordance. Dan terakhir materi conceptual dan perceptual design interaction akan memberikan gambaran bagaimana bentuk dari Interaction.'
+        : 'Antarmuka yang dibangun harus memperhatikan prinsip-prinsip desain yang ada. Hal ini diharapkan agar antarmuka yang dibangun bukan hanya menarik secara visual tetapi dengan memperhatikan kaidah-kaidah prinsip desain diharapkan akan mendukung pengguna dalam menggunakan produk secara baik.';
+
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      backgroundColor: Colors.transparent,
+      builder: (context) => DraggableScrollableSheet(
+        initialChildSize: 0.9,
+        minChildSize: 0.5,
+        maxChildSize: 0.95,
+        builder: (_, controller) => Container(
+          decoration: const BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.vertical(top: Radius.circular(20)),
+          ),
+          child: Column(
+            children: [
+              // Drag Handle
+              Container(
+                margin: const EdgeInsets.only(top: 12, bottom: 8),
+                width: 40,
+                height: 4,
+                decoration: BoxDecoration(
+                  color: Colors.grey[300],
+                  borderRadius: BorderRadius.circular(2),
+                ),
+              ),
+              
+              // Internal Content
+              Expanded(
+                child: DefaultTabController(
+                  length: 2,
+                  child: Column(
+                    children: [
+                      // Header
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                        child: Column(
+                          children: [
+                            Text(
+                              isMeeting2 ? 'Konsep User Interface Design' : title,
+                              style: const TextStyle(
+                                fontSize: 16, // Slightly reduced to match screenshot
+                                fontWeight: FontWeight.bold,
+                                color: Colors.black87
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            const SizedBox(height: 16),
+                            const Align(
+                              alignment: Alignment.centerLeft,
+                              child: Text(
+                                'Deskripsi',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 14,
+                                ),
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Text(
+                              description,
+                              style: const TextStyle(fontSize: 12, color: Colors.black87, height: 1.5),
+                              textAlign: TextAlign.justify,
+                            ),
+                          ],
+                        ),
+                      ),
+                      
+                      // Nested TabBar
+                      Container(
+                        color: Colors.grey[50], // Light background for tab bar area
+                        child: const TabBar(
+                          labelColor: Colors.black87,
+                          unselectedLabelColor: Colors.grey,
+                          indicatorColor: Colors.black87,
+                          indicatorSize: TabBarIndicatorSize.label,
+                          labelStyle: TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                          tabs: [
+                            Tab(text: 'Lampiran Materi'),
+                            Tab(text: 'Tugas dan Kuis'),
+                          ],
+                        ),
+                      ),
+
+                      // Nested TabView
+                      Expanded(
+                        child: TabBarView(
+                          children: [
+                            _buildLampiranList(controller, isMeeting2),
+                            isMeeting2 ? _buildTugasKuisPopulated(controller) : _buildTugasEmptyState(),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildLampiranList(ScrollController controller, bool isMeeting2) {
+    // Specific items for Meeting 2 vs Default
+    final items = isMeeting2
+        ? [
+            {'icon': Icons.link, 'title': 'Zoom Meeting Syncronous', 'type': 'link'},
+            {'icon': Icons.article, 'title': 'Elemen-elemen Antarmuka Pengguna', 'type': 'doc'},
+            {'icon': Icons.article, 'title': 'UID Guidelines and Principles', 'type': 'doc'},
+            {'icon': Icons.article, 'title': 'User Profile', 'type': 'doc'},
+            {'icon': Icons.link, 'title': 'Principles of User Interface DesignURL', 'type': 'link'},
+          ]
+        : [
+            {'icon': Icons.link, 'title': 'Zoom Meeting Syncronous', 'type': 'link'},
+            {'icon': Icons.picture_as_pdf, 'title': 'Pengantar User Interface Design', 'type': 'pdf'},
+            {'icon': Icons.article, 'title': 'Empat Teori Dasar Antarmuka Pengguna', 'type': 'doc'},
+            {'icon': Icons.link, 'title': '20 Prinsip Desain', 'type': 'link'},
+            {'icon': Icons.link, 'title': 'Best Practice UI Design', 'type': 'link'},
+          ];
+
+    return ListView.builder(
+      controller: controller,
+      padding: const EdgeInsets.all(20),
+      itemCount: items.length,
+      itemBuilder: (context, index) {
+        final item = items[index];
+        return Container(
+          margin: const EdgeInsets.only(bottom: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(30), // Pill shape
+            border: Border.all(color: Colors.grey.shade300),
+            boxShadow: [
+               BoxShadow(
+                color: Colors.black.withOpacity(0.03),
+                blurRadius: 4,
+                offset: const Offset(0, 2),
+              ),
+            ],
+          ),
+          child: Row(
+            children: [
+               Icon(item['icon'] as IconData, size: 22, color: Colors.black87),
+               const SizedBox(width: 16),
+               Expanded(
+                 child: Text(
+                   item['title'] as String,
+                   style: const TextStyle(fontSize: 13, fontWeight: FontWeight.w500),
+                 ),
+               ),
+               const Icon(Icons.check_circle, color: Colors.green, size: 22),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildTugasKuisPopulated(ScrollController controller) {
+    return ListView(
+      controller: controller,
+      padding: const EdgeInsets.all(20),
+      children: [
+        // Quiz Card
+        _buildDetailCard(
+          title: 'Quiz Review 01',
+          content: 'Silahkan kerjakan kuis ini dalam waktu 15 menit sebagai nilai pertama komponen kuis. Jangan lupa klik tombol Submit Answer setelah menjawab seluruh pertanyaan. Kerjakan sebelum hari Jum\'at, 26 Februari 2021 jam 23:59 WIB.',
+          icon: Icons.quiz_outlined,
+          isCompleted: true,
+        ),
+        const SizedBox(height: 16),
+        // Tugas Card
+        _buildDetailCard(
+          title: 'Tugas 01 - UID Android Mobile Game',
+          content: '1. Buatlah desain tampilan (antarmuka) pada aplikasi mobile game FPS (First Person Shooter) yang akan menjadi tugas pada mata kuliah Pemrograman Aplikasi Permainan.\n2. Desain yang dibuat harus melingkupi seluruh tampilan pada aplikasi/game, dari pertama kali aplikasi ......',
+          icon: Icons.assignment_outlined,
+          isCompleted: false, // Grey check
+        ),
+      ],
+    );
+  }
+
+  Widget _buildDetailCard({
+    required String title,
+    required String content,
+    required IconData icon,
+    required bool isCompleted,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: Colors.grey.shade300),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 4,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        children: [
+          // Header
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(
+                  child: Text(
+                    title,
+                    style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                  ),
+                ),
+                Icon(
+                  Icons.check_circle, 
+                  color: isCompleted ? Colors.green : Colors.grey[400],
+                  size: 20
+                ),
+              ],
+            ),
+          ),
+          const Divider(height: 1, thickness: 1),
+          // Body
+          Padding(
+            padding: const EdgeInsets.all(16),
+            child: Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Icon(icon, size: 24, color: Colors.black87),
+                const SizedBox(width: 16),
+                Container(width: 1, height: 60, color: Colors.grey[300]), // Vertical Divider
+                const SizedBox(width: 16),
+                Expanded(
+                  child: Text(
+                    content,
+                    style: const TextStyle(fontSize: 11, color: Colors.black87, height: 1.4),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildTugasEmptyState() {
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          // Illustration Placeholder
+           Image.network(
+            'https://cdni.iconscout.com/illustration/premium/thumb/empty-state-2130362-1800926.png', // Placeholder URL or local asset
+            height: 150,
+            errorBuilder: (context, error, stackTrace) => Icon(Icons.person_outline_rounded, size: 100, color: Colors.red.shade100),
+          ),
+          const SizedBox(height: 24),
+          const Text(
+            'Tidak Ada Tugas Dan Kuis Hari Ini',
+            style: TextStyle(
+              fontSize: 16,
+              fontWeight: FontWeight.w500,
+              color: Colors.black87,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    // Safely receive arguments
-    final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+    // Safely receive arguments or use fallback for development/hot-reload
+    final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>? ?? 
+    {
+      'name': 'DESAIN ANTARMUKA & PENGALAMAN PENGGUNA',
+      'progress': 0.9,
+    };
 
-    if (args == null) {
+    if (args.isEmpty) { // Should not happen with fallback, but safe check
       return Scaffold(
         appBar: AppBar(title: const Text('Detail Kelas')),
         body: const Center(child: Text('Error: Data kelas tidak ditemukan.')),
@@ -42,13 +330,13 @@ class _ClassDetailScreenState extends State<ClassDetailScreen> with SingleTicker
           style: TextStyle(color: Colors.white, fontWeight: FontWeight.w600),
         ),
         centerTitle: true,
-        backgroundColor: const Color(0xFFB71C1C), // Maroon
+        backgroundColor: const Color(0xFFB71C1C),
         elevation: 0,
         iconTheme: const IconThemeData(color: Colors.white),
       ),
       body: Column(
         children: [
-          // BAGIAN ATAS – INFO KELAS (Red Header Style or Clean White)
+          // BAGIAN ATAS – INFO KELAS
           Container(
             width: double.infinity,
             padding: const EdgeInsets.all(20),
@@ -96,10 +384,10 @@ class _ClassDetailScreenState extends State<ClassDetailScreen> with SingleTicker
             ),
           ),
           
-          // TAB NAVIGATION (Matched Style: Indicator Underline, Maroon text)
+          // TAB NAVIGATION
           Container(
             color: Colors.white,
-            margin: const EdgeInsets.only(top: 10), // Separator
+            margin: const EdgeInsets.only(top: 10),
             child: TabBar(
               controller: _tabController,
               labelColor: Colors.black87,
@@ -121,7 +409,7 @@ class _ClassDetailScreenState extends State<ClassDetailScreen> with SingleTicker
             child: TabBarView(
               controller: _tabController,
               children: [
-                _buildMateriTab(),
+                _buildMateriTab(context),
                 _buildTugasTab(),
                 _buildKuisTab(),
               ],
@@ -140,7 +428,7 @@ class _ClassDetailScreenState extends State<ClassDetailScreen> with SingleTicker
     required String subtitle,
     required Widget statusIcon,
     VoidCallback? onTap,
-    Widget? leadingIcon, // Optional Icon for Tugas/Kuis
+    Widget? leadingIcon,
   }) {
     return Card(
       elevation: 0,
@@ -155,7 +443,6 @@ class _ClassDetailScreenState extends State<ClassDetailScreen> with SingleTicker
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Row 1: Badge & Status
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -178,8 +465,6 @@ class _ClassDetailScreenState extends State<ClassDetailScreen> with SingleTicker
                 ],
               ),
               const SizedBox(height: 12),
-              
-              // Row 2: Title & Content
               Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -219,8 +504,7 @@ class _ClassDetailScreenState extends State<ClassDetailScreen> with SingleTicker
     );
   }
 
-  // TAB 1 – MATERI
-  Widget _buildMateriTab() {
+  Widget _buildMateriTab(BuildContext context) {
     final List<Map<String, dynamic>> materiList = [
       {
         'badge': 'Pertemuan 1',
@@ -263,7 +547,7 @@ class _ClassDetailScreenState extends State<ClassDetailScreen> with SingleTicker
         
         return _buildBadgeCard(
           badgeText: item['badge'],
-          badgeColor: const Color(0xFF42A5F5), // Light Blue
+          badgeColor: const Color(0xFF42A5F5),
           title: item['title'],
           subtitle: item['subtitle'],
           statusIcon: Icon(
@@ -271,12 +555,12 @@ class _ClassDetailScreenState extends State<ClassDetailScreen> with SingleTicker
             color: isCompleted ? Colors.green : Colors.grey[300],
             size: 20
           ),
+          onTap: () => _showMeetingDetail(context, item['title']),
         );
       },
     );
   }
 
-  // TAB 2 – TUGAS
   Widget _buildTugasTab() {
     final List<Map<String, dynamic>> tugasList = [
       {
@@ -322,7 +606,6 @@ class _ClassDetailScreenState extends State<ClassDetailScreen> with SingleTicker
     );
   }
 
-  // TAB 3 – KUIS
   Widget _buildKuisTab() {
     final List<Map<String, dynamic>> kuisList = [
       {
