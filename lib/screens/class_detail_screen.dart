@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'document_viewer_screen.dart';
+import 'video_player_screen.dart';
 
 class ClassDetailScreen extends StatefulWidget {
   const ClassDetailScreen({super.key});
@@ -165,6 +166,11 @@ class _ClassDetailScreenState extends State<ClassDetailScreen> with SingleTicker
               Navigator.push(
                 context,
                 MaterialPageRoute(builder: (context) => const DocumentViewerScreen()),
+              );
+            } else if (item['type'] == 'link') {
+               Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => const VideoPlayerScreen()),
               );
             }
           },
