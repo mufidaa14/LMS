@@ -1,7 +1,15 @@
 import 'package:flutter/material.dart';
+import 'quiz_review_screen.dart';
 
 class QuizAttemptScreen extends StatefulWidget {
-  const QuizAttemptScreen({super.key});
+  final bool isReviewMode;
+  final int initialIndex;
+
+  const QuizAttemptScreen({
+    super.key, 
+    this.isReviewMode = false,
+    this.initialIndex = 0,
+  });
 
   @override
   State<QuizAttemptScreen> createState() => _QuizAttemptScreenState();
@@ -11,6 +19,12 @@ class _QuizAttemptScreenState extends State<QuizAttemptScreen> {
   int _currentQuestionIndex = 0;
   final int _totalQuestions = 15;
   
+  @override
+  void initState() {
+    super.initState();
+    _currentQuestionIndex = widget.initialIndex;
+  }
+
   // Dummy data for questions
   final List<Map<String, dynamic>> _questions = [
     {
@@ -54,7 +68,51 @@ class _QuizAttemptScreenState extends State<QuizAttemptScreen> {
       setState(() {
         _currentQuestionIndex++;
       });
+    } else {
+      if (widget.isReviewMode) {
+        // In review mode, maybe just loop or stay? Or return?
+        // Let's just do nothing for now or go to last page
+      } else {
+         // Last question - Submit logic
+         // Instead of dialog, go to Review Screen? 
+         // User Prompt said: "selanjunya hamana ini" showing review screen.
+         // So "Submit" -> Go to Review Screen.
+         Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const QuizReviewScreen()),
+         );
+      }
     }
+  }
+
+  void _showSubmitDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Kirim Jawaban?'),
+        content: const Text('Apakah Anda yakin ingin menyelesaikan kuis ini? Pastikan semua soal telah terjawab.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Batal'),
+          ),
+          ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context); // Close dialog
+              Navigator.pop(context); // Close quiz screen
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(content: Text('Kuis berhasil dikirim!')),
+              );
+            },
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(0xFFB71C1C),
+              foregroundColor: Colors.white,
+            ),
+            child: const Text('Kirim'),
+          ),
+        ],
+      ),
+    );
   }
 
   void _prevQuestion() {
@@ -83,9 +141,9 @@ class _QuizAttemptScreenState extends State<QuizAttemptScreen> {
           icon: const Icon(Icons.arrow_back, color: Colors.white),
           onPressed: () => Navigator.pop(context),
         ),
-        title: const Text(
-          'Quiz Review 1',
-          style: TextStyle(
+        title: Text(
+          widget.isReviewMode ? 'Quiz Review 1' : 'Quiz Review 1', // Same title?
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 16,
             fontWeight: FontWeight.bold,
@@ -138,18 +196,19 @@ class _QuizAttemptScreenState extends State<QuizAttemptScreen> {
                         height: 32,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: isCurrent 
-                            ? Colors.green // Active green as per image 3 (top row)
-                            : Colors.white,
+                          color: isAnswered 
+                            ? const Color(0xFF00E676) // Bright Green for Answered
+                            : (isCurrent ? Colors.blue.shade100 : Colors.white), // Highlight current if not answered? Or just use border
                           border: Border.all(
-                            color: isCurrent ? Colors.green : Colors.grey.shade400,
+                            color: isCurrent ? Colors.black87 : Colors.grey.shade400, // Dark border for current
+                            width: isCurrent ? 2 : 1,
                           ),
                         ),
                         child: Center(
                           child: Text(
                             '${index + 1}',
                             style: TextStyle(
-                              color: isCurrent ? Colors.white : Colors.black87,
+                              color: isAnswered ? Colors.black87 : Colors.black87,
                               fontWeight: FontWeight.bold,
                               fontSize: 12,
                             ),
@@ -244,11 +303,30 @@ class _QuizAttemptScreenState extends State<QuizAttemptScreen> {
                          )
                        : const SizedBox.shrink(), // Placeholder to keep Next button aligned right if alone? Or SpaceBetween handles it.
                        
-                       // Next Button
-                       ElevatedButton(
+                       // Next Button / Finish Button / Review Back Button
+                       if (widget.isReviewMode) 
+                          Align(
+                            alignment: Alignment.center, // Center for "Kembali"
+                            child: SizedBox(
+                              height: 45,
+                              child: ElevatedButton(
+                                onPressed: () => Navigator.pop(context),
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.grey[100],
+                                  elevation: 0,
+                                  shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                                ),
+                                child: const Text("Kembali Ke Halam Review", style: TextStyle(color: Colors.black, fontWeight: FontWeight.bold, fontSize: 12)),
+                              ),
+                            ),
+                          )
+                       else
+                         ElevatedButton(
                          onPressed: _nextQuestion,
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.grey[200],
+                            backgroundColor: _currentQuestionIndex == _questions.length - 1 
+                                ? const Color(0xFF00E676) // Green for Selesai
+                                : Colors.grey[200],
                             foregroundColor: Colors.black,
                             elevation: 0,
                             shape: RoundedRectangleBorder(
@@ -256,7 +334,10 @@ class _QuizAttemptScreenState extends State<QuizAttemptScreen> {
                             ),
                              padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                           ),
-                         child: const Text('Soal Selanjutnya.', style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold)),
+                         child: Text(
+                           _currentQuestionIndex == _questions.length - 1 ? 'Selesai.' : 'Soal Selanjutnya.', 
+                           style: const TextStyle(fontSize: 12, fontWeight: FontWeight.bold)
+                         ),
                        ),
                     ],
                   ),
