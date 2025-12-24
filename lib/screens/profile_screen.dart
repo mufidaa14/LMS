@@ -9,11 +9,13 @@ class ProfileScreen extends StatefulWidget {
 
 class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProviderStateMixin {
   late TabController _tabController;
+  final Color primaryDark = const Color(0xFF800000); 
+  final Color primaryLight = const Color(0xFFA00000); 
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 3, vsync: this, initialIndex: 2); // Start at Edit Profile
+    _tabController = TabController(length: 3, vsync: this, initialIndex: 0);
   }
 
   @override
@@ -25,329 +27,391 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFFFAFAFA), // Slightly off-white background
+      backgroundColor: const Color(0xFFF5F5F7), // Match Home background
       body: SingleChildScrollView(
         child: Column(
           children: [
+            // ===========================
+            // 1. HEADER & PROFILE
+            // ===========================
             Stack(
               clipBehavior: Clip.none,
-              alignment: Alignment.topCenter,
+              alignment: Alignment.center,
               children: [
-                // 1. Header Background & Content
-                Container(
-                  height: 280, // Extended height to accommodate content
-                  width: double.infinity,
-                  color: const Color(0xFFB71C1C),
-                  padding: const EdgeInsets.only(top: 40, left: 16, right: 16),
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          IconButton(
-                            onPressed: () {
-                              Navigator.of(context).pushReplacementNamed('/home');
-                            },
-                            icon: const Icon(Icons.arrow_back, color: Colors.white),
+                // A. Curved Header Background
+                ClipPath(
+                  clipper: ProfileHeaderClipper(),
+                  child: Container(
+                    height: 260,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      gradient: LinearGradient(
+                        colors: [primaryDark, primaryLight],
+                        begin: Alignment.topLeft,
+                        end: Alignment.bottomRight,
+                      ),
+                    ),
+                    child: SafeArea(
+                      child: Padding(
+                        padding: const EdgeInsets.only(top: 16, left: 16),
+                        child: Align(
+                          alignment: Alignment.topLeft,
+                          child: InkWell(
+                            onTap: () => Navigator.of(context).pushReplacementNamed('/home'),
+                            borderRadius: BorderRadius.circular(50),
+                            child: Container(
+                              padding: const EdgeInsets.all(8),
+                              decoration: BoxDecoration(
+                                color: Colors.white.withOpacity(0.2),
+                                shape: BoxShape.circle,
+                              ),
+                              child: const Icon(Icons.arrow_back, color: Colors.white),
+                            ),
                           ),
-                        ],
-                      ),
-                      const SizedBox(height: 10),
-                      // Profile Image
-                      Container(
-                        padding: const EdgeInsets.all(3),
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
-                        ),
-                        child: const CircleAvatar(
-                          radius: 55, // 110px diameter
-                          backgroundColor: Colors.grey,
-                          backgroundImage: NetworkImage('https://via.placeholder.com/150'), // Placeholder
-                          child: Icon(Icons.person, size: 60, color: Colors.white), // Fallback
                         ),
                       ),
-                      const SizedBox(height: 12),
-                      // Name
-                      const Text(
-                        'DANDY CANDRA PRATAMA',
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    ],
+                    ),
                   ),
                 ),
 
-                // 2. Floating Menu Card
-                Container(
-                  margin: const EdgeInsets.only(top: 240, left: 16, right: 16),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(16),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.05),
-                        blurRadius: 10,
-                        offset: const Offset(0, 5),
-                      ),
-                    ],
+                // B. Decorative Circles (Optional consistency)
+                Positioned(
+                  top: -50, right: -50,
+                  child: Container(
+                    width: 150, height: 150,
+                    decoration: BoxDecoration(color: Colors.white.withOpacity(0.05), shape: BoxShape.circle),
                   ),
-                  child: TabBar(
-                    controller: _tabController,
-                    indicatorColor: const Color(0xFFB71C1C),
-                    indicatorWeight: 3,
-                    labelColor: Colors.black,
-                    unselectedLabelColor: Colors.grey,
-                    labelStyle: const TextStyle(fontWeight: FontWeight.bold),
-                    tabs: const [
-                      Tab(text: 'About Me'),
-                      Tab(text: 'Kelas'),
-                      Tab(text: 'Edit Profile'),
-                    ],
+                ),
+
+                // C. Profile Image & Name (Centered)
+                Align(
+                  alignment: Alignment.center,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 20),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min, // Wrap content height
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            color: Colors.white,
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                color: Colors.black.withOpacity(0.15),
+                                blurRadius: 20,
+                                offset: const Offset(0, 10),
+                              ),
+                            ],
+                          ),
+                          child: const CircleAvatar(
+                            radius: 55,
+                            backgroundColor: Colors.grey,
+                            backgroundImage: NetworkImage('https://via.placeholder.com/150'),
+                            child: Icon(Icons.person, size: 60, color: Colors.white),
+                          ),
+                        ),
+                        const SizedBox(height: 12),
+                        const Text(
+                          'FIDAAAAA', // Name
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            shadows: [Shadow(color: Colors.black26, blurRadius: 4)],
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ],
             ),
+
+            const SizedBox(height: 20),
             
-            // 3. Tab Content
-            // We use a SizedBox to give height, or let it take available space.
-            // Since we are in SingleChildScrollView, we need a constrained height if we use TabBarView normally.
-            // Alternatively, we can use an AnimatedBuilder or just switch locally if complex.
-            // For simplicity and scroll behavior:
+            // Status Badge (Below Header)
             Container(
-              margin: const EdgeInsets.only(top: 20),
-              padding: const EdgeInsets.symmetric(horizontal: 16),
-              // Calculate height dynamically or give fixed large height
-              height: 700, 
-              child: TabBarView(
-                controller: _tabController,
-                physics: const NeverScrollableScrollPhysics(), // Disable inner scroll
-                children: [
-                  _buildAboutMeTab(),
-                  _buildKelasTab(),
-                  _buildEditProfileTab(),
+              padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
+              decoration: BoxDecoration(
+                color: Colors.grey[200],
+                borderRadius: BorderRadius.circular(20),
+              ),
+              child: const Text(
+                'Mahasiswa Aktif',
+                style: TextStyle(color: Colors.black87, fontSize: 12, fontWeight: FontWeight.bold),
+              ),
+            ),
+
+            const SizedBox(height: 20), // Spacer before Tabs
+
+            // ===========================
+            // 2. TAB MENU
+            // ===========================
+            Container(
+              margin: const EdgeInsets.symmetric(horizontal: 20),
+              decoration: BoxDecoration(
+                color: Colors.white,
+                borderRadius: BorderRadius.circular(25),
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black.withOpacity(0.05),
+                    blurRadius: 10,
+                    offset: const Offset(0, 5),
+                  ),
                 ],
+              ),
+              child: TabBar(
+                controller: _tabController,
+                indicator: BoxDecoration(
+                  color: primaryDark,
+                  borderRadius: BorderRadius.circular(25),
+                ),
+                indicatorSize: TabBarIndicatorSize.tab,
+                labelColor: Colors.white,
+                unselectedLabelColor: Colors.grey,
+                labelStyle: const TextStyle(fontWeight: FontWeight.bold, fontSize: 13),
+                dividerColor: Colors.transparent,
+                padding: const EdgeInsets.all(6),
+                tabs: const [
+                  Tab(text: 'About Me'),
+                  Tab(text: 'Kelas'),
+                  Tab(text: 'Edit Profile'),
+                ],
+              ),
+            ),
+
+            const SizedBox(height: 24),
+
+            // ===========================
+            // 3. TAB CONTENT
+            // ===========================
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20),
+              child: SizedBox(
+                height: 600, // Fixed height or constraints
+                child: TabBarView(
+                  controller: _tabController,
+                  physics: const NeverScrollableScrollPhysics(),
+                  children: [
+                    _buildAboutMeTab(),
+                    _buildKelasTab(),
+                    _buildEditProfileTab(),
+                  ],
+                ),
               ),
             ),
           ],
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        backgroundColor: const Color(0xFFB71C1C),
-        selectedItemColor: Colors.white,
-        unselectedItemColor: Colors.white70,
-        currentIndex: 0, // Profile is accessed from Home, but for BottomNav context, keeping 0/none or highlight none? 
-        // Actually Profile doesn't have its own tab in the 3-item list (Home, Kelas, Notifikasi).
-        // The user hides Profile logic there?
-        // Wait, the previous code had 4 items, but I changed it to 3 in the refined profile screen.
-        // Let's stick to the 3 items (Home, Kelas, Notifikasi).
-        // Since we are on Profile, none should be selected or maybe Home is implicitly parent.
-        // But visuals might be confusing if Home is selected.
-        // I will use currentIndex: 0 as fallback or maybe not highlight anything if possible, but standard widget requires valid index.
-        type: BottomNavigationBarType.fixed,
-        onTap: (index) {
-          if (index == 0) {
-             Navigator.pushReplacementNamed(context, '/home');
-          } else if (index == 1) {
-             Navigator.pushReplacementNamed(context, '/class_list');
-          } else if (index == 2) {
-             Navigator.pushReplacementNamed(context, '/notification');
-          }
-        },
-        items: const [
-          BottomNavigationBarItem(
-            icon: Icon(Icons.home),
-            label: 'Home',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.school),
-            label: 'Kelas Saya',
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(Icons.notifications),
-            label: 'Notifikasi',
-          ),
-        ],
+      
+      // Matches Home Bottom Nav
+      bottomNavigationBar: Container(
+         decoration: BoxDecoration(
+          boxShadow: [
+            BoxShadow(color: Colors.black.withOpacity(0.05), blurRadius: 20, offset: const Offset(0, -5))
+          ]
+        ),
+        child: BottomNavigationBar(
+          backgroundColor: Colors.white,
+          selectedItemColor: primaryDark,
+          unselectedItemColor: Colors.grey[400],
+          currentIndex: 0, // No specific active tab for Profile usually, or treat as Home
+          type: BottomNavigationBarType.fixed,
+          elevation: 0,
+          onTap: (index) {
+            if (index == 0) Navigator.pushReplacementNamed(context, '/home');
+            else if (index == 1) Navigator.pushReplacementNamed(context, '/class_list');
+            else if (index == 2) Navigator.pushReplacementNamed(context, '/notification');
+          },
+          items: const [
+            BottomNavigationBarItem(icon: Icon(Icons.home_rounded), label: 'Home'),
+            BottomNavigationBarItem(icon: Icon(Icons.school_outlined), label: 'Kelas'),
+            BottomNavigationBarItem(icon: Icon(Icons.notifications_none_rounded), label: 'Notifikasi'),
+          ],
+        ),
       ),
     );
   }
 
+  // --- TAB 1: ABOUT ME ---
   Widget _buildAboutMeTab() {
-    return Padding(
-      padding: const EdgeInsets.all(16),
+    return Column(
+      children: [
+        _buildInfoCard('Informasi User', [
+          _buildInfoRow(Icons.email_outlined, 'Email', 'dandycandra365@telkomuniversity.ac.id'),
+          _buildInfoRow(Icons.school_outlined, 'Program Studi', 'D4 Teknologi Rekayasa Multimedia'),
+          _buildInfoRow(Icons.domain_outlined, 'Fakultas', 'FIT'),
+        ]),
+        const SizedBox(height: 20),
+        _buildInfoCard('Aktivitas Login', [
+          _buildInfoRow(Icons.calendar_today_outlined, 'First Access', 'Monday, 7 September 2020'),
+          _buildInfoRow(Icons.access_time, 'Last Access', 'Now'),
+        ]),
+      ],
+    );
+  }
+
+  Widget _buildInfoCard(String title, List<Widget> children) {
+    return Container(
+      width: double.infinity,
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 10, offset: const Offset(0, 4))],
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const Text(
-            'Informasi User',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 8),
-          const Text('Email address: dandycandra365@telkomuniversity.ac.id'),
-          const Text('Program Studi: D4 Teknologi Rekayasa Multimedia'),
-          const Text('Fakultas: FIT'),
+          Text(title, style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: primaryDark)),
           const SizedBox(height: 16),
-          const Text(
-            'Aktivitas Login',
-            style: TextStyle(
-              fontSize: 18,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          const SizedBox(height: 8),
-          const Text('First access to site: Monday, 7 September 2020, 9:27 AM (285 days 12 hours)'),
-          const Text('Last access to site: Tuesday, 22 June 2021, 9:44 PM (now)'),
+          ...children,
         ],
       ),
     );
   }
 
+  Widget _buildInfoRow(IconData icon, String label, String value) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 12),
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Icon(icon, size: 20, color: Colors.grey[400]),
+          const SizedBox(width: 12),
+          Expanded(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(label, style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+                const SizedBox(height: 2),
+                Text(value, style: const TextStyle(fontSize: 14, fontWeight: FontWeight.w500)),
+              ],
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
+  // --- TAB 2: KELAS ---
   Widget _buildKelasTab() {
     final classes = [
-      {'name': 'DESAIN ANTARMUKA & PENGALAMAN PENGGUNA', 'code': 'D4SM-41-04', 'schedule': 'Senin, 08:00 - 10:00'},
+      {'name': 'DESAIN ANTARMUKA', 'code': 'D4SM-41-04', 'schedule': 'Senin, 08:00 - 10:00'},
       {'name': 'KEWARGANEGARAAN', 'code': 'D4SM-41-04', 'schedule': 'Selasa, 10:00 - 12:00'},
       {'name': 'SISTEM OPERASI', 'code': 'D4SM-41-04', 'schedule': 'Rabu, 13:00 - 15:00'},
     ];
 
     return ListView.builder(
-      physics: const NeverScrollableScrollPhysics(), // Prevent nested scrolling issues
+      physics: const NeverScrollableScrollPhysics(),
       itemCount: classes.length,
       itemBuilder: (context, index) {
         final cls = classes[index];
-        return Card(
-          margin: const EdgeInsets.symmetric(horizontal: 0, vertical: 8), // Adjusted margin
-          elevation: 2,
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Row(
-              children: [
-                Switch(
-                  value: true,
-                  onChanged: (value) {},
-                  activeColor: const Color(0xFFB71C1C),
+        return Container(
+          margin: const EdgeInsets.only(bottom: 12),
+          padding: const EdgeInsets.all(16),
+          decoration: BoxDecoration(
+            color: Colors.white,
+            borderRadius: BorderRadius.circular(16),
+            boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 8, offset: const Offset(0, 3))],
+          ),
+          child: Row(
+            children: [
+              Container(
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(color: primaryDark.withOpacity(0.1), borderRadius: BorderRadius.circular(10)),
+                child: Icon(Icons.book, color: primaryDark),
+              ),
+              const SizedBox(width: 16),
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(cls['name']!, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
+                    const SizedBox(height: 4),
+                    Text(cls['schedule']!, style: TextStyle(fontSize: 12, color: Colors.grey[600])),
+                  ],
                 ),
-                const SizedBox(width: 16),
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        cls['name'] as String,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 14,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        cls['code'] as String,
-                         style: TextStyle(color: Colors.grey[700]),
-                      ),
-                      Text(
-                        cls['schedule'] as String,
-                        style: TextStyle(
-                          fontSize: 12,
-                          color: Colors.grey[500],
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         );
       },
     );
   }
 
+  // --- TAB 3: EDIT PROFILE ---
   Widget _buildEditProfileTab() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildLabeledInput('Nama Pertama'),
-        const SizedBox(height: 16),
-        _buildLabeledInput('Nama Terakhir'),
-        const SizedBox(height: 16),
-        _buildLabeledInput('E-mail Address', inputType: TextInputType.emailAddress),
-        const SizedBox(height: 16),
-        _buildLabeledInput('Negara', placeholder: 'Indonesia'),
-        const SizedBox(height: 16),
-        _buildLabeledInput('Deskripsi', maxLines: 4),
-        const SizedBox(height: 32),
-        
-        SizedBox(
-          width: double.infinity,
-          height: 48,
-          child: ElevatedButton(
-            onPressed: () {},
-            style: ElevatedButton.styleFrom(
-              backgroundColor: const Color(0xFFB71C1C),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(8),
+    return Container(
+      padding: const EdgeInsets.all(20),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(20),
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.03), blurRadius: 10)],
+      ),
+      child: Column(
+        children: [
+          _buildModernInput('Nama Depan', 'Nama Depan'),
+          const SizedBox(height: 16),
+          _buildModernInput('Nama Belakang', 'Nama Belakang'),
+          const SizedBox(height: 16),
+          _buildModernInput('Email', 'Email', icon: Icons.email_outlined),
+          const SizedBox(height: 24),
+          SizedBox(
+            width: double.infinity,
+            height: 50,
+            child: ElevatedButton(
+              onPressed: () {},
+              style: ElevatedButton.styleFrom(
+                backgroundColor: primaryDark,
+                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                elevation: 4,
+                shadowColor: primaryDark.withOpacity(0.4),
               ),
-              elevation: 0,
+              child: const Text('Simpan Perubahan', style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
             ),
-            child: const Text(
-              'Simpan',
-              style: TextStyle(
-                color: Colors.white,
-                fontWeight: FontWeight.bold,
-                fontSize: 16,
-              ),
-            ),
-          ),
-        ),
-      ],
+          )
+        ],
+      ),
     );
   }
 
-  Widget _buildLabeledInput(String label, {
-    TextInputType inputType = TextInputType.text,
-    String? placeholder,
-    int maxLines = 1,
-  }) {
+  Widget _buildModernInput(String label, String placeholder, {IconData? icon}) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(
-          label,
-          style: const TextStyle(
-            fontSize: 14,
-            fontWeight: FontWeight.w500,
-            color: Colors.black87,
-          ),
-        ),
+        Text(label, style: TextStyle(fontSize: 13, color: Colors.grey[700], fontWeight: FontWeight.w500)),
         const SizedBox(height: 8),
         TextField(
-          keyboardType: inputType,
-          maxLines: maxLines,
           decoration: InputDecoration(
             hintText: placeholder,
-            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
-            border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: Colors.grey),
-            ),
-            enabledBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: Colors.grey), // Grey thin border
-            ),
-            focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(8),
-              borderSide: const BorderSide(color: Color(0xFFB71C1C)),
-            ),
+            prefixIcon: icon != null ? Icon(icon, color: primaryDark.withOpacity(0.6), size: 20) : null,
             filled: true,
-            fillColor: Colors.white,
+            fillColor: const Color(0xFFF9F9F9),
+            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12), borderSide: BorderSide.none),
+            contentPadding: const EdgeInsets.symmetric(horizontal: 16, vertical: 14),
           ),
-        ),
+        )
       ],
     );
   }
+}
+
+// HEADER CLIPPER
+class ProfileHeaderClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    var path = Path();
+    path.lineTo(0, size.height - 60);
+    // Cembung ke bawah
+    var controlPoint = Offset(size.width / 2, size.height + 30);
+    var endPoint = Offset(size.width, size.height - 60);
+    path.quadraticBezierTo(controlPoint.dx, controlPoint.dy, endPoint.dx, endPoint.dy);
+    path.lineTo(size.width, 0);
+    path.close();
+    return path;
+  }
+  @override
+  bool shouldReclip(CustomClipper<Path> oldClipper) => false;
 }
