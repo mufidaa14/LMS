@@ -223,9 +223,12 @@ class _ClassDetailScreenState extends State<ClassDetailScreen> with SingleTicker
 
         return GestureDetector(
           onTap: () {
-             if (isQuiz) {
-               // Quiz navigation can be added here if needed
-             } else {
+            if (task['type'] == 'Kuis') {
+              Navigator.push(
+                context, 
+                MaterialPageRoute(builder: (context) => const QuizDetailScreen()),
+              );
+            } else {
                Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -233,7 +236,7 @@ class _ClassDetailScreenState extends State<ClassDetailScreen> with SingleTicker
                   settings: RouteSettings(arguments: task),
                 ),
               );
-             }
+            }
           },
           child: Container(
             margin: const EdgeInsets.only(bottom: 20),

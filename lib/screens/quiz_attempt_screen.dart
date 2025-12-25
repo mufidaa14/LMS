@@ -176,10 +176,13 @@ class _QuizAttemptScreenState extends State<QuizAttemptScreen> {
             Container(
               padding: const EdgeInsets.symmetric(vertical: 20),
               color: Colors.white,
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Row(
+              width: double.infinity,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20),
+                child: Wrap(
+                  spacing: 12,
+                  runSpacing: 12,
+                  alignment: WrapAlignment.center,
                   children: List.generate(_totalQuestions, (index) {
                     final isCurrent = index == _currentQuestionIndex;
                     final isAnswered = _questions[index]['selectedAnswer'] != -1;
@@ -191,16 +194,15 @@ class _QuizAttemptScreenState extends State<QuizAttemptScreen> {
                         });
                       },
                       child: Container(
-                        margin: const EdgeInsets.symmetric(horizontal: 6),
-                        width: 32,
-                        height: 32,
+                        width: 36,
+                        height: 36,
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           color: isAnswered 
                             ? const Color(0xFF00E676) // Bright Green for Answered
-                            : (isCurrent ? Colors.blue.shade100 : Colors.white), // Highlight current if not answered? Or just use border
+                            : (isCurrent ? Colors.white : Colors.white), 
                           border: Border.all(
-                            color: isCurrent ? Colors.black87 : Colors.grey.shade400, // Dark border for current
+                            color: isCurrent ? Colors.black87 : Colors.grey.shade400,
                             width: isCurrent ? 2 : 1,
                           ),
                         ),
