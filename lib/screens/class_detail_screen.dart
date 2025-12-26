@@ -405,14 +405,29 @@ class _ClassDetailScreenState extends State<ClassDetailScreen> with SingleTicker
                         style: TextStyle(fontSize: 13, color: Colors.grey[700]),
                       ),
                       const SizedBox(height: 16),
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(4),
-                        child: LinearProgressIndicator(
-                          value: (args['progress'] as num?)?.toDouble() ?? 0.0,
-                          backgroundColor: Colors.grey[200],
-                          valueColor: AlwaysStoppedAnimation<Color>(primaryDark),
-                          minHeight: 8,
-                        ),
+                      Row(
+                        children: [
+                          Expanded(
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(4),
+                              child: LinearProgressIndicator(
+                                value: (args['progress'] as num?)?.toDouble() ?? 0.0,
+                                backgroundColor: Colors.grey[200],
+                                valueColor: AlwaysStoppedAnimation<Color>(primaryDark),
+                                minHeight: 8,
+                              ),
+                            ),
+                          ),
+                          const SizedBox(width: 12),
+                          Text(
+                            '${(((args['progress'] as num?)?.toDouble() ?? 0.0) * 100).toInt()}%',
+                            style: TextStyle(
+                              fontSize: 14, 
+                              fontWeight: FontWeight.bold, 
+                              color: primaryDark
+                            ),
+                          ),
+                        ],
                       ),
                     ],
                   ),
