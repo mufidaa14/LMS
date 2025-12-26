@@ -223,7 +223,7 @@ class _ClassDetailScreenState extends State<ClassDetailScreen> with SingleTicker
 
         return GestureDetector(
           onTap: () {
-            if (task['type'] == 'Kuis') {
+            if (task['type'] == 'Kuis' || task['type'] == 'quiz') {
               Navigator.push(
                 context, 
                 MaterialPageRoute(builder: (context) => const QuizDetailScreen()),
@@ -666,59 +666,81 @@ class _ClassDetailScreenState extends State<ClassDetailScreen> with SingleTicker
               )
             ],
           ),
-          child: Padding(
-            padding: const EdgeInsets.all(16),
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    // Badge
-                    Container(
-                      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6), // Wider padding
-                      decoration: BoxDecoration(
-                        color: const Color(0xFF64B5F6), // Light Blue
-                        borderRadius: BorderRadius.circular(6),
-                      ),
-                      child: Text(
-                        item['label'],
-                        style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
-                      ),
+          child: Material(
+            color: Colors.transparent,
+            child: InkWell(
+              onTap: () {
+                if (isQuiz) {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => const QuizDetailScreen()),
+                  );
+                } else {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const TaskDetailScreen(),
+                      settings: RouteSettings(arguments: item),
                     ),
-                    // Status Check
-                   Icon(
-                      Icons.check_circle,
-                      color: item['isDone'] ? const Color(0xFF43A047) : Colors.grey[400],
-                      size: 24,
-                    ),
-                  ],
-                ),
-                const SizedBox(height: 16),
-                
-                Row(
+                  );
+                }
+              },
+              borderRadius: BorderRadius.circular(12),
+              child: Padding(
+                padding: const EdgeInsets.all(16),
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    // Icon Main
-                    isQuiz 
-                    ? const Icon(Icons.quiz_outlined, size: 40, color: Colors.black87)
-                    : const Icon(Icons.assignment_outlined, size: 40, color: Colors.black87),
-
-                    const SizedBox(width: 16),
-                    Expanded(
-                      child: Text(
-                        item['title'],
-                        style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87),
-                      ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        // Badge
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 6), // Wider padding
+                          decoration: BoxDecoration(
+                            color: const Color(0xFF64B5F6), // Light Blue
+                            borderRadius: BorderRadius.circular(6),
+                          ),
+                          child: Text(
+                            item['label'],
+                            style: const TextStyle(color: Colors.white, fontSize: 12, fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        // Status Check
+                       Icon(
+                          Icons.check_circle,
+                          color: item['isDone'] ? const Color(0xFF43A047) : Colors.grey[400],
+                          size: 24,
+                        ),
+                      ],
                     ),
+                    const SizedBox(height: 16),
+                    
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        // Icon Main
+                        isQuiz 
+                        ? const Icon(Icons.quiz_outlined, size: 40, color: Colors.black87)
+                        : const Icon(Icons.assignment_outlined, size: 40, color: Colors.black87),
+    
+                        const SizedBox(width: 16),
+                        Expanded(
+                          child: Text(
+                            item['title'],
+                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold, color: Colors.black87),
+                          ),
+                        ),
+                      ],
+                    ),
+                     const SizedBox(height: 16),
+                     Text(
+                       'Tenggat Waktu : ${item['deadline']}',
+                       style: TextStyle(fontSize: 11, color: Colors.grey[500]),
+                     )
                   ],
                 ),
-                 const SizedBox(height: 16),
-                 Text(
-                   'Tenggat Waktu : ${item['deadline']}',
-                   style: TextStyle(fontSize: 11, color: Colors.grey[500]),
-                 )
-              ],
+              ),
             ),
           ),
         );

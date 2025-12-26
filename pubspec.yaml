@@ -91,6 +91,7 @@ flutter:
   assets:
     - assets/images/foto login.png
     - assets/images/Logo untuk Login.png
+    - assets/images/login_logo.png
     - assets/images/empty_state_girl.png
     - assets/images/splash_screen.png
     - assets/videos/

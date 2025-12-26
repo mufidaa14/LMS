@@ -55,7 +55,7 @@ class TaskDetailScreen extends StatelessWidget {
     );
 
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: const Color(0xFFF5F5F7), // Light grey background for better contrast
       appBar: AppBar(
         backgroundColor: const Color(0xFFB71C1C), // Telkom Red
         leading: IconButton(
@@ -76,11 +76,38 @@ class TaskDetailScreen extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 // Instructions / Description
-                // If specific Tugas 01, show detailed list. Else show arg description
-                title.contains('01 - UID') ? tugas01Desc : Text(
-                  descFromArgs.isNotEmpty ? descFromArgs : 'No Description', 
-                  style: const TextStyle(fontSize: 15, height: 1.5, color: Colors.black87),
-                  textAlign: TextAlign.justify
+                // Description Section with Card
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Deskripsi Tugas',
+                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: Colors.black87),
+                    ),
+                    const SizedBox(height: 12),
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.all(20),
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius: BorderRadius.circular(16),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.grey.withOpacity(0.1),
+                            spreadRadius: 1,
+                            blurRadius: 10,
+                            offset: const Offset(0, 4), 
+                          ),
+                        ],
+                        border: Border.all(color: Colors.grey.shade100),
+                      ),
+                      child: title.contains('01 - UID') ? tugas01Desc : Text(
+                          descFromArgs.isNotEmpty ? descFromArgs : 'No Description', 
+                          style: const TextStyle(fontSize: 15, height: 1.6, color: Colors.black87),
+                          textAlign: TextAlign.justify
+                        ),
+                    ),
+                  ],
                 ),
                 
                 const SizedBox(height: 30),

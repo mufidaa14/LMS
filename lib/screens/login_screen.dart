@@ -60,7 +60,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       height: 90,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
-                        color: Colors.white,
+                        color: maroonColor, // Changed from Colors.white
                         boxShadow: [
                           BoxShadow(
                             color: Colors.black.withOpacity(0.15),
@@ -69,13 +69,13 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ],
                       ),
-                      padding: const EdgeInsets.all(10),
+                      padding: const EdgeInsets.all(16), // A bit more padding for the logo
                       child: ClipOval(
                         child: Image.asset(
-                          'assets/images/Logo untuk Login.png',
+                          'assets/images/login_logo.png', // New Logo
                           fit: BoxFit.contain,
                           errorBuilder: (context, error, stackTrace) {
-                            return Icon(Icons.school, size: 40, color: maroonColor);
+                            return const Icon(Icons.school, size: 40, color: Colors.white);
                           },
                         ),
                       ),
