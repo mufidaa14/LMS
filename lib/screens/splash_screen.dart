@@ -52,27 +52,9 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               // Replaced Image with stylized text
-              const Text(
-                'CeLoE',
-                style: TextStyle(
-                  color: Colors.white,
-                  fontFamily: 'sans-serif', // Using standard font
-                  fontSize: 72, // Large size
-                  fontWeight: FontWeight.w300, // Thin/Light weight to mimic logo look
-                  letterSpacing: -2.0, // Tighter spacing
-                ),
-              ),
-              const SizedBox(height: 12),
-              const Text(
-                'Learning Management System',
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontFamily: 'sans-serif',
-                  fontSize: 14, // Smaller text
-                  fontWeight: FontWeight.w400, 
-                  letterSpacing: 0.5,
-                ),
+              Image.asset(
+                'assets/images/splash_screen.png',
+                width: 300,
               ),
             ],
           ),
