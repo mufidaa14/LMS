@@ -85,7 +85,7 @@ class HomeScreen extends StatelessWidget {
                                 ),
                                 const SizedBox(height: 4),
                                 const Text(
-                                  'FIDAAAAA',
+                                  'ROYHATUL JANNATUL MUFIDA',
                                   style: TextStyle(
                                     color: Colors.white,
                                     fontSize: 24,
@@ -201,7 +201,7 @@ class HomeScreen extends StatelessWidget {
                         style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       const Spacer(),
-                      Icon(Icons.arrow_forward, size: 18, color: primaryDark)
+                      // Icon(Icons.arrow_forward, size: 18, color: primaryDark) // Removed as per request
                     ],
                   ),
                   const SizedBox(height: 12),

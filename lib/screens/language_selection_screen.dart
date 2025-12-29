@@ -74,7 +74,7 @@ class _LanguageSelectionScreenState extends State<LanguageSelectionScreen> {
                     elevation: 2,
                   ),
                   child: const Text(
-                    'CONTINUE',
+                    'Lanjutkan',
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,

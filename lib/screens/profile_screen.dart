@@ -113,7 +113,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                         ),
                         const SizedBox(height: 12),
                         const Text(
-                          'FIDAAAAA', // Name
+                          'ROYHATULJANNATUL MUFIDA', // Name
                           style: TextStyle(
                             color: Colors.white,
                             fontSize: 20,
@@ -174,7 +174,7 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
                 dividerColor: Colors.transparent,
                 padding: const EdgeInsets.all(6),
                 tabs: const [
-                  Tab(text: 'About Me'),
+                  Tab(text: 'Tentang Saya'),
                   Tab(text: 'Kelas'),
                   Tab(text: 'Edit Profile'),
                 ],
@@ -239,13 +239,13 @@ class _ProfileScreenState extends State<ProfileScreen> with SingleTickerProvider
     return Column(
       children: [
         _buildInfoCard('Informasi User', [
-          _buildInfoRow(Icons.email_outlined, 'Email', 'dandycandra365@telkomuniversity.ac.id'),
-          _buildInfoRow(Icons.school_outlined, 'Program Studi', 'D4 Teknologi Rekayasa Multimedia'),
-          _buildInfoRow(Icons.domain_outlined, 'Fakultas', 'FIT'),
+          _buildInfoRow(Icons.email_outlined, 'Email', 'royhatul jannatulmufida@gmail.com'),
+          _buildInfoRow(Icons.school_outlined, 'Program Studi', 'S1 Teknik Informatika'),
+          _buildInfoRow(Icons.domain_outlined, 'Fakultas', 'TEKNIK'),
         ]),
         const SizedBox(height: 20),
         _buildInfoCard('Aktivitas Login', [
-          _buildInfoRow(Icons.calendar_today_outlined, 'First Access', 'Monday, 7 September 2020'),
+          _buildInfoRow(Icons.calendar_today_outlined, 'First Access', 'Senin, 7 September 2022'),
           _buildInfoRow(Icons.access_time, 'Last Access', 'Now'),
         ]),
       ],

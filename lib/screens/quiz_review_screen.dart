@@ -164,11 +164,10 @@ class QuizReviewScreen extends StatelessWidget {
               child: ElevatedButton(
                 onPressed: () {
                    // Final Submit Logic
-                   // For now, pop back to Detail or Class
-                   Navigator.popUntil(context, ModalRoute.withName('/helper')); // Simple pop
-                   // Ideally pop until ClassDetailScreen or show success
-                   Navigator.of(context).pop(); // Pops Review
-                   Navigator.of(context).pop(); // Pops Attempt if stacked, or handle appropriately
+                   // Pop until we reach the Class Detail screen or the root
+                   Navigator.popUntil(context, (route) {
+                     return route.settings.name == '/class_detail' || route.isFirst;
+                   });
                    ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text("Jawaban Akhir Terkirim!")));
                 },
                 style: ElevatedButton.styleFrom(
